@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="VisionLab">
+  <component name="PublishConfigData" serverName="VisionLab">
     <serverData>
+      <paths name="Copy of project-level server 'VisionLab'">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="VisionLab">
         <serverdata>
           <mappings>
-            <mapping deploy="/DatabaseDesign/DBDesign" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/WebDev/DBDesign" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
     </serverData>
-    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+{% block title %}首页{% endblock %}
+{% block content %}
+    <div class="container">
+    <div class="carousel slide" data-ride="carousel" id="slide-show" data-interval="3000">
+
+        <ol class="carousel-indicators">
+            <li data-target="#slide-show" data-slide-to="0" class="active"></li>
+            <li data-target="#slide-show" data-slide-to="1"></li>
+            <li data-target="#slide-show" data-slide-to="2"></li>
+            <li data-target="#slide-show" data-slide-to="3"></li>
+        </ol>
+
+        <div class="carousel-inner">
+            <div class="item active">
+                {% load static %}
+                <img src="{% static 'img/blackcar.jpg' %}" alt="">
+                <div class="carousel-caption">
+                    <h2>速度</h2>
+                </div>
+            </div>
+            <div class="item">
+                {% load static %}
+                <img src="{% static 'img/home-ad.jpg' %}" alt="">
+                <div class="carousel-caption">
+                    <h2>安全</h2>
+                </div>
+            </div>
+            <div class="item">
+                {% load static %}
+                <img src="{% static 'img/success.jpg' %}" alt="" >
+                <div class="carousel-caption">
+                    <h2>创新</h2>
+                </div>
+            </div>
+            <div class="item">
+                {% load static %}
+                <img src="{% static 'img/moveup.jpg' %}" alt="">
+                <div class="carousel-caption">
+                    <h2>坚持</h2>
+                </div>
+            </div>
+        </div>
+        <a href="#slide-show" data-slide="prev" class="left carousel-control">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a href="#slide-show" data-slide="next" class="right carousel-control">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+    </div>
+
+    <div class="text-center" style="padding: 20px;">
+        <div class="btn-group">
+            <button class="btn btn-default prev-slide">
+                <span class="glyphicon glyphicon-backward"></span>
+            </button>
+            <button class="btn btn-default play-and-stop">
+                <span class="glyphicon glyphicon-play"></span>
+            </button>
+            <button class="btn btn-default next-slide">
+                <span class="glyphicon glyphicon-forward"></span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+{#    <form action="/TransportationManagement/login/" method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form }}#}
+{#        <input type="submit" value="登录">#}
+{#    </form>#}
+{##}
+{##}
+{#    <br>#}
+{##}
+{#    <form action="/TransportationManagement/login/" method="post">#}
+{#        {% csrf_token %}#}
+{#        <label for="username">用户名</label>#}
+{#        <input type="text" id="username" name="username">#}
+{#        <label for="password">密码</label>#}
+{#        <input type="password" id="password" name="password">#}
+{#        <input type="submit" value="登录">#}
+{#    </form>#}
+
+{% endblock %}
+
+
+{##}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>首页</title>#}
+{#    <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">#}
+{#    {% load static %}#}
+{#    <link rel="stylesheet" href="{% static 'css/style.css'%}">#}
+{#    <link rel="stylesheet" href="static/css/style.css">#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<nav class="navbar navbar-inverse navbar-fixed-top">#}
+{##}
+{#    <a href="#" class="navbar navbar-brand"><strong>车辆运输管理系统</strong></a>#}
+{#    <ul class="nav navbar-nav">#}
+{#        <li class="active"><a href="{% url 'TransportationManagement:car' %}">车辆管理</a></li>#}
+{#        <li><a href="{% url 'TransportationManagement:driver' %}">司机信息</a></li>#}
+{#        <li><a href="{% url 'TransportationManagement:proposer' %}">业务申请</a></li>#}
+{#        <li><a href="{% url 'TransportationManagement:record' %}">运营记录</a></li>#}
+{#        <li><a href="{% url 'TransportationManagement:accident' %}">事故信息</a>#}
+{#        </li><li><a href="Driver.html">司机信息</a></li>#}
+{#        <li><a href="Proposer.html">业务申请</a></li>#}
+{#        <li><a href="Record.html">运营记录</a></li>#}
+{#        <li><a href="Accident.html">事故信息</a></li>#}
+{#    </ul>#}
+{##}
+{#    <!--<a href="" class="btn btn-primary btn-sm navbar-btn navbar-right">登录</a>-->#}
+{#    <div class="profile navbar-right">#}
+{#    <ul class="nav navbar-nav">#}
+{#        <li><a href="" data-toggle="modal" data-target="#login-modal" class="btn btn-primary btn-sm navbar-btn">登录</a></li>#}
+{#        <li><a href="" class="btn btn-sm navbar-btn">注册</a></li>#}
+{#    </ul>#}
+{#        <!--<p class="navbar-text">您好，<a href="#" class="navbar-link">用户x</a></p>-->#}
+{#    </div>#}
+{#</nav>#}
+{##}
+{#<div class="container">#}
+{#    <div class="carousel slide" data-ride="carousel" id="slide-show" data-interval="3000">#}
+{##}
+{#        <ol class="carousel-indicators">#}
+{#            <li data-target="#slide-show" data-slide-to="0" class="active"></li>#}
+{#            <li data-target="#slide-show" data-slide-to="1"></li>#}
+{#            <li data-target="#slide-show" data-slide-to="2"></li>#}
+{#            <li data-target="#slide-show" data-slide-to="3"></li>#}
+{#        </ol>#}
+{##}
+{#        <div class="carousel-inner">#}
+{#            <div class="item active">#}
+{#                {% load static %}#}
+{#                <img src="{% static 'img/blackcar.jpg' %}" alt="">#}
+{#                <img src="static/img/blackcar.jpg" alt="">#}
+{#                <div class="carousel-caption">#}
+{#                    <h2>速度</h2>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="item">#}
+{#                {% load static %}#}
+{#                <img src="{% static 'img/home-ad.jpg' %}" alt="">#}
+{#                <img src="static/img/home-ad.jpg" alt="">#}
+{#                <div class="carousel-caption">#}
+{#                    <h2>安全</h2>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="item">#}
+{#                {% load static %}#}
+{#                <img src="{% static 'img/success.jpg' %}" alt="" >#}
+{#                <img src="static/img/success.jpg" alt="" >#}
+{#                <div class="carousel-caption">#}
+{#                    <h2>创新</h2>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="item">#}
+{#                {% load static %}#}
+{#                <img src="{% static 'img/moveup.jpg' %}" alt="">#}
+{#                <img src="static/img/moveup.jpg" alt="">#}
+{#                <div class="carousel-caption">#}
+{#                    <h2>坚持</h2>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <a href="#slide-show" data-slide="prev" class="left carousel-control">#}
+{#            <span class="glyphicon glyphicon-chevron-left"></span>#}
+{#        </a>#}
+{#        <a href="#slide-show" data-slide="next" class="right carousel-control">#}
+{#            <span class="glyphicon glyphicon-chevron-right"></span>#}
+{#        </a>#}
+{#    </div>#}
+{##}
+{#    <div class="text-center" style="padding: 20px;">#}
+{#        <div class="btn-group">#}
+{#            <button class="btn btn-default prev-slide">#}
+{#                <span class="glyphicon glyphicon-backward"></span>#}
+{#            </button>#}
+{#            <button class="btn btn-default play-and-stop">#}
+{#                <span class="glyphicon glyphicon-play"></span>#}
+{#            </button>#}
+{#            <button class="btn btn-default next-slide">#}
+{#                <span class="glyphicon glyphicon-forward"></span>#}
+{#            </button>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#</div>#}
+{#<div class="modal fade" id="login-modal" tabindex="-1">#}
+{#    <div class="modal-dialog modal-sm">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <button class="close" data-dismiss="modal">&times;</button>#}
+{#                <h4>用户登录</h4>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                <form id="login-form" action="index1.html" role="form" method="post">#}
+{#                    <div class="form-group">#}
+{#                        <label for="username">用户名</label>#}
+{#                        <input type="text" class="form-control" id="username" placeholder="Your name">#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="password">密码</label>#}
+{#                        <input type="password" class="form-control" id="password" placeholder="Password">#}
+{#                    </div>#}
+{#                </form>#}
+{#            </div>#}
+{#            <div class="modal-footer">#}
+{#                <input type="submit" class="btn btn-primary" value="登录">#}
+{#                <button class="btn btn-primary">登录</button>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div class="modal-backdrop in">#}
+{##}
+{##}
+{#</div>#}
+{##}
+{##}
+{#{% load static %}#}
+{#<script src="{% static 'lib/jquery-3.3.1.min.js' %}"></script>#}
+{#<script src="{% static 'lib/bootstrap/js/bootstrap.min.js' %}"></script>#}
+{#<script src="{% static 'js/app.js' %}"></script>#}
+{#<script src="{% static 'lib/holder.js' %}"></script>#}
+{##}
+{##}
+{#<script>#}
+{#    $(function () {#}
+{#        $('#login-modal').modal({#}
+{#            show:false,#}
+{#            backdrop: true,#}
+{#        })#}
+{#    })#}
+{#</script>#}
+{#</body>#}
+{#</html>#}

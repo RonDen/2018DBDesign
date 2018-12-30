@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="8b608b60-0a47-4dd0-a95e-9bee290a6093" name="VisionLab" url="http://222.199.225.159">
-        <fileTransfer host="222.199.225.159" port="22" rootFolder="/home/LuoD" accessType="SFTP">
+        <fileTransfer host="222.199.225.159" port="22" rootFolder="/media/data/LuoD" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" shareSSLContext="true" />
           </advancedOptions>

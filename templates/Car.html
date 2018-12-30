@@ -1,10 +1,369 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Car</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}车辆信息{% endblock %}
+{% block content %}
 
-</body>
-</html>
+<h1>The Car Infomation Page</h1>
+
+
+<div id="num_type_pie" style="width: 800px;height: 400px;"></div>
+<br/>
+<div id="num_type_bar" style="width: 800px;height: 400px;"></div>
+
+<script>
+    {#var myChart = echarts.init(document.getElementById('num_type_pie'));#}
+    var myChart = echarts.init(document.getElementById('num_type_pie'));
+    var types = [];
+    var nums = [];
+    {% for type in type_list %}
+        types.push("{{ type }}");
+    {% endfor %}
+    {% for num in num_list %}
+        nums.push({{ num }});
+    {% endfor %}
+    var type_num_data = [];
+    for (var i = 0; i < nums.length; i ++){
+        {#type_num_data.push({types[i]: nums[i]});#}
+        obj = {};
+        obj['value'] = nums[i];
+        obj['name'] = types[i];
+        type_num_data.push(obj);
+        {#type_num_dict[types[i]] = nums[i];#}
+        delete obj;
+        console.log(types[i], nums[i]);
+    }
+    var options = {
+        title:{
+            text:'车辆类别饼图',
+            x: 'center'
+        },
+        tooltip:{
+                trigger: 'item',
+                show:true,
+                formatter: "{a} {b} : {c} ({d}%)",
+                {#formatter:'类型：{a}<br />数量:{b}<br />'#}
+            },
+        legend:{
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            top: 20,
+            bottom: 20,
+            data: types,
+        },
+        series: [
+            {
+            name:'数量',
+            type:'pie',
+            data: type_num_data,
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+        ]
+    };
+    myChart.setOption(options);
+
+    var barChar = echarts.init(document.getElementById('num_type_bar'));
+    var barOption = {
+        baseOption:{
+            title:{
+                text:'不同种类车辆数',
+            },
+            legend:{
+                data:types,
+            },
+            xAxis:{
+                data:types
+            },
+            yAxis:{
+
+            },
+            tooltip:{
+                trigger: 'item',
+                show:true,
+                formatter: "{a} : {b} ({c})",
+            },
+            series:[{
+                name:'车辆数',
+                type:'bar',
+                data: nums,
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine:{
+                    data:[
+                        {type:'average',name:'平均值',itemStyle:{
+                                normal:{
+                                    color:'green'
+                                }
+                            }}
+                    ]
+                }
+            },{
+                name:'浮动变化',
+                type:'line',
+                data:nums,
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine:{
+                    data:[
+                        {type:'average',name:'平均值',itemStyle:{
+                                normal:{
+                                    color:'blue'
+                                }
+                            }}
+                    ]
+                }
+            }]
+        },
+    };
+    barChar.setOption(barOption);
+
+</script>
+
+    <button>点我显示图像</button>
+
+<table class="table table-hover table-responsive">
+    <caption>车辆信息</caption>
+    <thead>
+    <tr>
+        <th>车牌号</th>
+        <th>车辆类型</th>
+        <th>每百公里耗油量</th>
+        <th>是否正常</th>
+    </tr>
+    </thead>
+
+    {% if car_list %}
+        <tbody>
+        {{% for car in car_list %}
+        <tr>
+        <td>{{ car.CNo }}</td>
+        <td>{{ car.CType }}</td>
+        <td>{{ car.COilConsumpution }}</td>
+        <td>{{ car.isAvailable }}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    {% endif %}
+</table>
+
+    <form action="">
+    {% csrf_token %}
+    <input type="button" onclick="ajaxSubmit();" value="测试">
+    </form>
+    <script>
+    function ajaxSubmit() {
+        var host = '1.1.1.1';
+        var port = '1111';
+        var data_list = [
+            {'host':host},
+            {'port':port}
+        ];
+        $.ajax({
+            url:"/TransportationManagement/ajax_submit/",
+            type:"POST",
+            data:JSON.stringify(data_list),
+            success: function (arg) {
+
+            }
+        });
+    }
+    </script>
+
+{% endblock %}
+
+
+
+{##}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Car</title>#}
+{#    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">#}
+{#    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>#}
+{#    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
+{#    <script src="{% static 'js/echarts.js' %}"></script>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<h1>The Car Infomation Page</h1>#}
+{##}
+{##}
+{#<div id="num_type_pie" style="width: 800px;height: 400px;"></div>#}
+{#<br/>#}
+{#<div id="num_type_bar" style="width: 800px;height: 400px;"></div>#}
+{#<script>#}
+    {#var myChart = echarts.init(document.getElementById('num_type_pie'));#}
+{#    var myChart = echarts.init(document.getElementById('num_type_pie'));#}
+{#    var types = [];#}
+{#    var nums = [];#}
+{#    {% for type in type_list %}#}
+{#        types.push("{{ type }}");#}
+{#    {% endfor %}#}
+{#    {% for num in num_list %}#}
+{#        nums.push({{ num }});#}
+{#    {% endfor %}#}
+{#    var type_num_data = [];#}
+{#    for (var i = 0; i < nums.length; i ++){#}
+        {#type_num_data.push({types[i]: nums[i]});#}
+{#        obj = {};#}
+{#        obj['value'] = nums[i];#}
+{#        obj['name'] = types[i];#}
+{#        type_num_data.push(obj);#}
+        {#type_num_dict[types[i]] = nums[i];#}
+{#        delete obj;#}
+{#        console.log(types[i], nums[i]);#}
+{#    }#}
+{#    var options = {#}
+{#        title:{#}
+{#            text:'车辆类别饼图',#}
+{#            x: 'center'#}
+{#        },#}
+{#        tooltip:{#}
+{#                trigger: 'item',#}
+{#                show:true,#}
+{#                formatter: "{a} {b} : {c} ({d}%)",#}
+                {#formatter:'类型：{a}<br />数量:{b}<br />'#}
+{#            },#}
+{#        legend:{#}
+{#            type: 'scroll',#}
+{#            orient: 'vertical',#}
+{#            right: 10,#}
+{#            top: 20,#}
+{#            bottom: 20,#}
+{#            data: types,#}
+{#        },#}
+{#        series: [#}
+{#            {#}
+{#            name:'数量',#}
+{#            type:'pie',#}
+{#            data: type_num_data,#}
+{#            itemStyle: {#}
+{#                emphasis: {#}
+{#                    shadowBlur: 10,#}
+{#                    shadowOffsetX: 0,#}
+{#                    shadowColor: 'rgba(0, 0, 0, 0.5)'#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#        ]#}
+{#    };#}
+{#    myChart.setOption(options);#}
+{##}
+{#    var barChar = echarts.init(document.getElementById('num_type_bar'));#}
+{#    var barOption = {#}
+{#        baseOption:{#}
+{#            title:{#}
+{#                text:'不同种类车辆数',#}
+{#            },#}
+{#            legend:{#}
+{#                data:types,#}
+{#            },#}
+{#            xAxis:{#}
+{#                data:types#}
+{#            },#}
+{#            yAxis:{#}
+{##}
+{#            },#}
+{#            tooltip:{#}
+{#                trigger: 'item',#}
+{#                show:true,#}
+{#                formatter: "{a} : {b} ({c})",#}
+{#            },#}
+{#            series:[{#}
+{#                name:'车辆数',#}
+{#                type:'bar',#}
+{#                data: nums,#}
+{#                markPoint: {#}
+{#                    data: [#}
+{#                        {type: 'max', name: '最大值'},#}
+{#                        {type: 'min', name: '最小值'}#}
+{#                    ]#}
+{#                },#}
+{#                markLine:{#}
+{#                    data:[#}
+{#                        {type:'average',name:'平均值',itemStyle:{#}
+{#                                normal:{#}
+{#                                    color:'green'#}
+{#                                }#}
+{#                            }}#}
+{#                    ]#}
+{#                }#}
+{#            },{#}
+{#                name:'浮动变化',#}
+{#                type:'line',#}
+{#                data:nums,#}
+{#                markPoint: {#}
+{#                    data: [#}
+{#                        {type: 'max', name: '最大值'},#}
+{#                        {type: 'min', name: '最小值'}#}
+{#                    ]#}
+{#                },#}
+{#                markLine:{#}
+{#                    data:[#}
+{#                        {type:'average',name:'平均值',itemStyle:{#}
+{#                                normal:{#}
+{#                                    color:'blue'#}
+{#                                }#}
+{#                            }}#}
+{#                    ]#}
+{#                }#}
+{#            }]#}
+{#        },#}
+{#    };#}
+{#    barChar.setOption(barOption);#}
+{##}
+{#</script>#}
+{##}
+{#<table class="table table-hover table-responsive">#}
+{#    <caption>车辆信息</caption>#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th>车牌号</th>#}
+{#        <th>车辆类型</th>#}
+{#        <th>每百公里耗油量</th>#}
+{#        <th>是否正常</th>#}
+{#    </tr>#}
+{#    </thead>#}
+{##}
+{#    {% if car_list %}#}
+{#        <tbody>#}
+{#        {{% for car in car_list %}#}
+{#        <tr>#}
+{#        <td>{{ car.CNo }}</td>#}
+{#        <td>{{ car.CType }}</td>#}
+{#        <td>{{ car.COilConsumpution }}</td>#}
+{#        <td>{{ car.isAvailable }}</td>#}
+{#        </tr>#}
+{#    {% endfor %}#}
+{#        </tbody>#}
+{#    {% endif %}#}
+{#</table>#}
+{##}
+{#<script type="text/javascript">#}
+{#    {% if car_list %}#}
+{#        var CarList = {{ car_list }};#}
+{##}
+{#        for (car in CarList) {#}
+{#            console.log(car.valueOf())#}
+{#        }#}
+{#    {% endif %}#}
+{##}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
