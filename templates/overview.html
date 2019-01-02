@@ -1,0 +1,827 @@
+{% extends 'basenew.html' %}
+{% load static %}
+{% block title %}信息总览{% endblock %}
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        信息总览
+        <small>dashboard</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'TransportationManagement:index' %}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">信息总览</li>
+      </ol>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-soild">
+                    <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">车辆状态<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="col-md-4">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">车辆种类占比：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="carfig1" style="width: 300px;height:200px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">车辆种类占比：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="carfig2" style="width: 300px;height:200px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">车辆维修情况：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="carfig3" style="width: 300px;height:200px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box box-solid">
+                <div class="box-header">
+                    <i class="fa fa-bar-chart-o"></i>
+                    <h3 class="box-title">司机信息<small>(%)</small></h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="box-body">
+                        <div class="col-md-4">
+                            <!-- BAR CHART -->
+                            <div class="box box-success">
+
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">司机年龄分布：</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <div id="driverfig1" style="width: 300px;height:200px;"></div>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- BAR CHART -->
+                            <div class="box box-success">
+
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">司机性别分布：</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <div id="driverfig2" style="width: 300px;height:200px;"></div>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- BAR CHART -->
+                            <div class="box box-success">
+
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">雇佣时间分布：</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                    <div id="driverfig3" style="width: 300px;height:200px;"></div>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box box-soild">
+                    <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">业务申请状态<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">业务申请数量：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="profig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">申请车辆类别：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="profig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                </div>
+                <div class="box box-soild">
+                    <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">运营记录分析<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">油耗分析：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="recordfig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">运输时长：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="recordfig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                </div>
+
+                <div class="box box-soild">
+                    <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">事故分析<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">高频时间：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">事故地点：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">事故原因：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig3" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">赔偿金额：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig4" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </section>
+{% endblock %}
+
+
+
+{% block script %}
+    <script src="{% static 'plugins/echarts.js' %}"></script>
+    <!-- AdminLTE App -->
+    <!-- SlimScroll 1.3.0 -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <script src="{% static 'plugins/knob/jquery.knob.js' %}"></script>
+    <script>
+    function carplot() {
+        var carchart1 = echarts.init(document.getElementById('carfig1'));//车辆类别饼图
+        var carchart2 = echarts.init(document.getElementById('carfig2'));//车辆类别统计图
+        var carchart3 = echarts.init(document.getElementById('carfig3'));//车辆维修情况
+        var types = [];
+        var nums = [];
+        {% for type in type_list %}
+            types.push("{{ type }}");
+        {% endfor %}
+        {% for num in num_list %}
+            nums.push({{ num }});
+        {% endfor %}
+        var type_num_data = [];
+        for (var i = 0; i < nums.length; i ++){
+            {#type_num_data.push({types[i]: nums[i]});#}
+            obj = {};
+            obj['value'] = nums[i];
+            obj['name'] = types[i];
+            type_num_data.push(obj);
+            {#type_num_dict[types[i]] = nums[i];#}
+            delete obj;
+            console.log(types[i], nums[i]);
+        }
+        var chart1op = {
+                title:{
+                x: 'center'
+            },
+            tooltip:{
+                    trigger: 'item',
+                    show:true,
+                    formatter: "{a} {b} : {c} ({d}%)",
+                },
+            legend:{
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+                data: {{ pie_car_aviable | safe }},
+            },
+            series: [
+                {
+                name:'数量',
+                type:'pie',
+                data: {{ pie_car_aviable | safe }},
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+            ]
+        };
+        var chart2op = {
+            baseOption:{
+            title:{
+                text:'不同种类车辆数',
+            },
+            legend:{
+                data:types,
+            },
+            xAxis:{
+                data:types
+            },
+            yAxis:{
+
+            },
+            tooltip:{
+                trigger: 'item',
+                show:true,
+                formatter: "{a} : {b} ({c})",
+            },
+            series:[{
+                name:'车辆数',
+                type:'bar',
+                data: nums,
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine:{
+                    data:[
+                        {type:'average',name:'平均值',itemStyle:{
+                                normal:{
+                                    color:'green'
+                                }
+                            }}
+                    ]
+                }
+            },{
+                name:'浮动变化',
+                type:'line',
+                data:nums,
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值'},
+                        {type: 'min', name: '最小值'}
+                    ]
+                },
+                markLine:{
+                    data:[
+                        {type:'average',name:'平均值',itemStyle:{
+                                normal:{
+                                    color:'blue'
+                                }
+                            }}
+                    ]
+                }
+            }]
+        },
+        };
+        var chart3op = {
+            title:{
+                text:'车辆维修情况',
+                x: 'center'
+            },
+            tooltip:{
+                    trigger: 'item',
+                    show:true,
+                    formatter: "{a} {b} : {c} ({d}%)",
+                    {#formatter:'类型：{a}<br />数量:{b}<br />'#}
+                },
+            legend:{
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+                data: types,
+            },
+            series: [
+                {
+                name:'数量',
+                type:'pie',
+                data: {{ pie_car_aviable | safe }},
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+            ]
+        };
+        carchart1.setOption(chart1op);
+        carchart2.setOption(chart2op);
+        carchart3.setOption(chart3op);
+    }
+    function driverplot() {
+            var driverchart1 = echarts.init(document.getElementById('driverfig1'));//司机年龄分布
+            var driverchart2 = echarts.init(document.getElementById('driverfig2'));//司机性别分布
+            var driverchart3 = echarts.init(document.getElementById('driverfig3'));//雇佣时间分布
+
+            var chart1op = {
+                title:{},
+                legend:{
+                    data: {{ age_list | safe }}
+                },
+                tooltip:{
+                    trigger: 'item',
+                    show:true,
+                    formatter: "{a} {b} : {c}",
+                },
+                xAxis:{
+                    data: {{ age_list | safe }},
+                    },
+                yAxis:{},
+                series:[{
+                   name:'数量',
+                   type:'bar',
+                    data:{{ age_c | safe }},
+                    markPoint:{
+                        data:[
+                            {type:'max', name:'最大值', itemStyle:{normal: {color: 'red'}}},
+                            {type:'min', name:'最小值', itemStyle:{normal: {color: 'gray'}}}
+                        ],
+                    },
+                    markLine:{
+                        data:[
+                            {type:'average', name:'平均值', itemStyle: {nomal: {color: 'green'}}}
+                        ],
+                    }
+                }],
+            };
+            var chart2op = {
+                title:{
+            },
+            legend:{
+                data:['男', '女']
+            },
+            tooltip:{
+                trigger: 'item',
+                show:true,
+                formatter: "{a} {b} : {c} ({d}%)",
+            },
+            series:[
+                {
+                    name:'数量',
+                    type:'pie',
+                    data: [
+                        {value: {{ male_num }}, name:'男'},
+                        {value: {{ female_num }}, name:'女'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+            };
+            var chart3op = {
+                title:{
+                },
+                legend:{
+                    data: {{ date_list | safe }}
+                },
+                tooltips:{
+                    trigger: 'item',
+                    show:true,
+                    formatter: "{a} : {b} ({c})",
+                },
+                xAxis:{
+                    text: '年龄',
+                    data: {{ date_list | safe }}
+                },
+                yAxis:{},
+                series:[{
+                    name:'数量',
+                    type:'line',
+                    data: {{ date_c | safe }},
+                    markPoint:{
+                        data:[
+                            {type: 'max', name:'最大值', itemStyle:{normal: {color: 'red'}}},
+                            {type: 'min', name:'最小值', itemStyle:{normal: {color: 'gray'}}},
+                        ]
+                    },
+                    markLine: {
+                        data:[
+                            {type: 'average', name: '平均值', itemStyle:{normal: {color: 'green'}}},
+                        ]
+                    }
+            }],
+            };
+            driverchart1.setOption(chart1op);
+            driverchart2.setOption(chart2op);
+            driverchart3.setOption(chart3op);
+        }
+
+    function proposeplot() {
+        var prochart1 = echarts.init(document.getElementById('profig1'));//业务申请数量时间
+        var prochart2 = echarts.init(document.getElementById('profig2'));//车辆类型
+        var chart1op = {
+            title:{},
+            legend:{},
+            xAxis:{
+                data:{{ pro_date_list | safe }}
+            },
+            yAxis:{},
+            tooltip:{},
+            series:[{
+                name:'业务申请数量变化',
+                type:'line',
+                data:{{ pro_date_c | safe }}
+            }],
+        };
+        var chart2op = {
+            title:{},
+            legend:{
+                data:{{ pro_type_list | safe }}
+            },
+            tooltip:{},
+            series:[{
+                type:'pie',
+                data: {{ pie_data | safe }}
+            }]
+        };
+        prochart1.setOption(chart1op);
+        prochart2.setOption(chart2op);
+    }
+    function recordplot() {
+        var recordchart1 = echarts.init(document.getElementById('recordfig1'));//油耗分析
+        var recordchart2 = echarts.init(document.getElementById('recordfig2'));//时长分析
+        var chart1op = {
+            title:{},
+            legend:{
+                data:{{ oil_list | safe}}
+            },
+            tooltip:{},
+            xAxis:{
+                data:{{ oil_list | safe}},
+                axisPointer: {
+                    value: {{ average_oil | safe }},
+                    snap: true,
+                    lineStyle: {
+                        color: '#00aE52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    handle: {
+                    show: true,
+                    color: '#ee4E52'
+                }
+                }
+            },
+            yAxis:{},
+            series:[{
+                name:'耗油量',
+                type:'bar',
+                data: {{ oil_count | safe }},
+                markPoint:{
+                        data:[
+                            {type: 'max', name:'最大值', itemStyle:{normal: {color: 'red'}}},
+                            {type: 'min', name:'最小值', itemStyle:{normal: {color: 'gray'}}},
+                        ]
+                    },
+                markLine: {
+                        data:[
+                            {type: 'average', name: '平均值', itemStyle:{normal: {color: 'green'}}},
+                        ]
+                }
+            }],
+        };
+        var chart2op = {
+          title: {},
+          legend: {
+              data: {{ bins | safe }}
+          },
+          tooltip:{},
+          xAxis: {
+              data: {{ bins | safe }},
+              axisPointer: {
+                  value: {{ avg_bins | safe }}
+              }
+          },
+          yAxis: {},
+          series: [{
+              name:'频数',
+              type: 'bar',
+              data: {{ c | safe }},
+              markPoint:[
+                  {type:'max', name:'最大值', itemStyle:{normal:{color: 'red'}}},
+                  {type:'min', name:'最小值', itemStyle:{normal:{color: 'gray'}}},
+                  ],
+              snap: true,
+                    lineStyle: {
+                        color: '#00aE52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    handle: {
+                    show: true,
+                    color: '#ee4E52'
+                }
+          }]
+        };
+        recordchart1.setOption(chart1op);
+        recordchart2.setOption(chart2op);
+    }
+    function accidentplot() {
+        var accchart1 = echarts.init(document.getElementById('accfig1'));//事故时间
+        var accchart2 = echarts.init(document.getElementById('accfig2'));//事故地点
+        var accchart3 = echarts.init(document.getElementById('accfig3'));//事故原因
+        var accchart4 = echarts.init(document.getElementById('accfig4'));//赔偿金额
+        var chart1op = {
+            title:{},
+            legend:{
+                data: ['2016年','2017年','2018年']
+            },
+            tooltip:{},
+            xAxis:{
+                data: ['2016年','2017年','2018年']
+            },
+            yAxis:{},
+            series:[
+                {
+                    name:'年份计数',
+                    type:'bar',
+                    data: {{ year_count | safe}}
+                }
+            ]
+        };
+        var chart2op = {
+            title:{},
+            legend:{
+                data:{{ pie_spot | safe }}
+            },
+            tooltip:{},
+            series:[{
+                name:'事故地点',
+                type:'pie',
+                data: {{ pie_spot | safe}}
+            }]
+        };
+        var chart3op = {
+            title:{},
+            legend:{
+                data:{{ pie_cause | safe }}
+            },
+            tooltip:{},
+            series:[{
+                name:'事故原因',
+                type:'pie',
+                data: {{ pie_cause | safe }}
+            }]
+        };
+        var chart4op = {
+            title:{},
+            legend:{
+                show:true,
+                data: {{ pie_money | safe }}
+            },
+            tooltip:{},
+            series:[
+                {
+                    name:'赔偿金额',
+                    type:'pie',
+                    data:{{ pie_money | safe }}
+                }
+            ]
+        };
+        accchart1.setOption(chart1op);
+        accchart2.setOption(chart2op);
+        accchart3.setOption(chart3op);
+        accchart4.setOption(chart4op);
+    }
+    carplot();
+    driverplot();
+    proposeplot();
+    recordplot();
+    accidentplot();
+
+    </script>
+{% endblock %}
+

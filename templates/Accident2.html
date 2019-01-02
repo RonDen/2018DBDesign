@@ -1,0 +1,297 @@
+{% extends 'basenew.html' %}
+{% load static %}
+{% block title %}事故信息{% endblock %}
+{% block css%}
+    <!-- The table theme-->
+  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+<!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        事故信息
+        <small>info</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'TransportationManagement:accident' %}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">事故信息</li>
+      </ol>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">运营记录分析<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="box box-soild">
+                    <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">事故分析<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">高频时间：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">事故地点：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">事故原因：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig3" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">赔偿金额：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="accfig4" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        </div>
+                    </div>
+                    </div>
+
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">事故总表</h3>
+                    <button class="btn  btn-primary pull-right" id="newAccident">增加</button>
+                    <button class="btn  pull-right" id="changeAccident" >修改</button>
+                    <button class="btn  pull-right" id="deleteAccident" >删除</button>
+                </div>
+                <div class="box-body">
+                    <table id="accident_table" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>肇事司机工号</th>
+                            <th>肇事司机姓名</th>
+                            <th>肇事车号码</th>
+                            <th>事故车号码</th>
+                            <th>事故时间</th>
+                            <th>事故地点</th>
+                            <th>事故原因</th>
+                            <th>赔偿金额</th>
+                            <th>是否删除</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for accident in accident_list %}
+                            <tr>
+                                <td>{{ accident.id }}</td>
+                                <td>{{ accident.ZSDNo_id }}</td>
+                                <td>{{ accident.ZSDName }}</td>
+                                <td>{{ accident.ZSCNo }}</td>
+                                <td>{{ accident.SGCNo }}</td>
+                                <td>{{ accident.Time | date:"Y/m/d" }}</td>
+                                <td>{{ accident.Spot }}</td>
+                                <td>{{ accident.Cause }}</td>
+                                <td>{{ accident.Money }}</td>
+                                {% if accident.isDelete == True %}
+                                    <td class="text-gray text-bold">已删除</td>
+                                    {% else %}
+                                    <td class="text-green text-bold">正常</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>编号</th>
+                            <th>肇事司机工号</th>
+                            <th>肇事司机姓名</th>
+                            <th>肇事车号码</th>
+                            <th>事故车号码</th>
+                            <th>事故时间</th>
+                            <th>事故地点</th>
+                            <th>事故原因</th>
+                            <th>赔偿金额</th>
+                            <th>是否删除</th>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+{% endblock %}
+
+
+
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- SlimScroll -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- page script -->
+
+<script>
+
+
+$(function () {
+        $('#accident_table').DataTable({
+          "paging": true,       <!-- 允许分页 -->
+          "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+          "searching": true,    <!-- 允许内容搜索 -->
+          "ordering": true,     <!-- 允许排序 -->
+          "info": true,         <!-- 显示信息 -->
+          "autoWidth": false,    <!-- 固定宽度 -->
+        });
+});
+function accidentplot() {
+        var accchart1 = echarts.init(document.getElementById('accfig1'));//事故时间
+        var accchart2 = echarts.init(document.getElementById('accfig2'));//事故地点
+        var accchart3 = echarts.init(document.getElementById('accfig3'));//事故原因
+        var accchart4 = echarts.init(document.getElementById('accfig4'));//赔偿金额
+        var chart1op = {
+            title:{},
+            legend:{
+                data: ['2016年','2017年','2018年']
+            },
+            tooltip:{},
+            xAxis:{
+                data: ['2016年','2017年','2018年']
+            },
+            yAxis:{},
+            series:[
+                {
+                    name:'年份计数',
+                    type:'bar',
+                    data: {{ year_count | safe}}
+                }
+            ]
+        };
+        var chart2op = {
+            title:{},
+            legend:{
+                data:{{ pie_spot | safe }}
+            },
+            tooltip:{},
+            series:[{
+                name:'事故地点',
+                type:'pie',
+                data: {{ pie_spot | safe}}
+            }]
+        };
+        var chart3op = {
+            title:{},
+            legend:{
+                data:{{ pie_cause | safe }}
+            },
+            tooltip:{},
+            series:[{
+                name:'事故原因',
+                type:'pie',
+                data: {{ pie_cause | safe }}
+            }]
+        };
+        var chart4op = {
+            title:{},
+            legend:{
+                show:true,
+                data: {{ pie_money | safe }}
+            },
+            tooltip:{},
+            series:[
+                {
+                    name:'赔偿金额',
+                    type:'pie',
+                    data:{{ pie_money | safe }}
+                }
+            ]
+        };
+        accchart1.setOption(chart1op);
+        accchart2.setOption(chart2op);
+        accchart3.setOption(chart3op);
+        accchart4.setOption(chart4op);
+    }
+accidentplot();
+</script>
+{% endblock %}

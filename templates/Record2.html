@@ -1,0 +1,251 @@
+{% extends 'basenew.html' %}
+{% load static %}
+{% block title %}运营记录{% endblock %}
+{% block css%}
+    <!-- The table theme-->
+  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+<!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        运营记录
+        <small>info</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'TransportationManagement:record' %}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">运营记录</li>
+      </ol>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+            <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">运营记录分析<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">油耗分析：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="recordfig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">运输时长：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="recordfig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                    </div>
+        </div>
+
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">记录总表</h3>
+                    <button class="btn  btn-primary pull-right" id="newRecord">增加</button>
+                    <button class="btn  pull-right" id="changeRecord" >修改</button>
+                    <button class="btn  pull-right" id="deleteRecord" >删除</button>
+                </div>
+                <div class="box-body">
+                    <table id="record_table" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>记录编号</th>
+                            <th>司机工号</th>
+                            <th>司机姓名</th>
+                            <th>车牌号码</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>耗油量</th>
+                            <th>是否删除</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in record_list %}
+                            <tr>
+                                <td>{{ record.id }}</td>
+                                <td>{{ record.DNo }}</td>
+                                <td>{{ record.DName }}</td>
+                                <td>{{ record.CNo }}</td>
+                                <td>{{ record.STime | date:"Y/m/d"}}</td>
+                                <td>{{ record.ETime | date:"Y/m/d"}}</td>
+                                <td>{{ record.OilConsumpution }}</td>
+                                {% if record.isDelete == True %}
+                                    <td class="text-gray text-bold">已删除</td>
+                                    {% else %}
+                                    <td class="text-green text-bold">正常</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>记录编号</th>
+                            <th>司机工号</th>
+                            <th>司机姓名</th>
+                            <th>车牌号码</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>耗油量</th>
+                            <th>是否删除</th>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- SlimScroll -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- page script -->
+
+<script>
+
+
+$(function () {
+        $('#record_table').DataTable({
+          "paging": true,       <!-- 允许分页 -->
+          "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+          "searching": true,    <!-- 允许内容搜索 -->
+          "ordering": true,     <!-- 允许排序 -->
+          "info": true,         <!-- 显示信息 -->
+          "autoWidth": false,    <!-- 固定宽度 -->
+        });
+});
+
+function recordplot() {
+        var recordchart1 = echarts.init(document.getElementById('recordfig1'));//油耗分析
+        var recordchart2 = echarts.init(document.getElementById('recordfig2'));//时长分析
+        var chart1op = {
+            title:{},
+            legend:{
+                data:{{ oil_list | safe}}
+            },
+            tooltip:{},
+            xAxis:{
+                data:{{ oil_list | safe}},
+                axisPointer: {
+                    value: {{ average_oil | safe }},
+                    snap: true,
+                    lineStyle: {
+                        color: '#00aE52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    handle: {
+                    show: true,
+                    color: '#ee4E52'
+                }
+                }
+            },
+            yAxis:{},
+            series:[{
+                name:'耗油量',
+                type:'bar',
+                data: {{ oil_count | safe }},
+                markPoint:{
+                        data:[
+                            {type: 'max', name:'最大值', itemStyle:{normal: {color: 'red'}}},
+                            {type: 'min', name:'最小值', itemStyle:{normal: {color: 'gray'}}},
+                        ]
+                    },
+                markLine: {
+                        data:[
+                            {type: 'average', name: '平均值', itemStyle:{normal: {color: 'green'}}},
+                        ]
+                }
+            }],
+        };
+        var chart2op = {
+          title: {},
+          legend: {
+              data: {{ bins | safe }}
+          },
+          tooltip:{},
+          xAxis: {
+              data: {{ bins | safe }},
+              axisPointer: {
+                  value: {{ avg_bins | safe }}
+              }
+          },
+          yAxis: {},
+          series: [{
+              name:'频数',
+              type: 'bar',
+              data: {{ c | safe }},
+              markPoint:[
+                  {type:'max', name:'最大值', itemStyle:{normal:{color: 'red'}}},
+                  {type:'min', name:'最小值', itemStyle:{normal:{color: 'gray'}}},
+                  ],
+              snap: true,
+                    lineStyle: {
+                        color: '#00aE52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    handle: {
+                    show: true,
+                    color: '#ee4E52'
+                }
+          }]
+        };
+        recordchart1.setOption(chart1op);
+        recordchart2.setOption(chart2op);
+    }
+
+    recordplot();
+</script>
+{% endblock %}

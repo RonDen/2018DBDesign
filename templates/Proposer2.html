@@ -1,0 +1,194 @@
+{% extends 'basenew.html' %}
+{% load static %}
+{% block title %}业务申请{% endblock %}
+{% block css%}
+    <!-- The table theme-->
+  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+<!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+{% endblock %}
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        业务信息
+        <small>info</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'TransportationManagement:proposer' %}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">业务申请</li>
+      </ol>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">业务信息<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">业务申请数量：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="profig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">待办业务量：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="profig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                    </div>
+        </div>
+
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">申请总表</h3>
+                    <button class="btn  btn-primary pull-right" id="newProposer">增加</button>
+                    <button class="btn  pull-right" id="changeProposer" >修改</button>
+                    <button class="btn  pull-right" id="deleteProposer" >删除</button>
+                </div>
+                <div class="box-body">
+                    <table id="proposer_table" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>车辆类型</th>
+                            <th>申请数量</th>
+                            <th>申请里程</th>
+                            <th>申请时间</th>
+                            <th>是否受理</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for proposer in proposer_list %}
+                            <tr>
+                                <td>{{ proposer.id }}</td>
+                                <td>{{ proposer.CType }}</td>
+                                <td>{{ proposer.Num }}</td>
+                                <td>{{ proposer.Mileage }}</td>
+                                <td>{{ proposer.Date }}</td>
+                                {% if proposer.isRecived == True %}
+                                    <td class="text-green text-bold">已受理</td>
+                                    {% else %}
+                                    <td class="text-red text-bold">未受理</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>编号</th>
+                            <th>车辆类型</th>
+                            <th>申请数量</th>
+                            <th>申请里程</th>
+                            <th>申请时间</th>
+                            <th>是否受理</th>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- SlimScroll -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- page script -->
+<script>
+$(function () {
+        $('#proposer_table').DataTable({
+          "paging": true,       <!-- 允许分页 -->
+          "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+          "searching": true,    <!-- 允许内容搜索 -->
+          "ordering": true,     <!-- 允许排序 -->
+          "info": true,         <!-- 显示信息 -->
+          "autoWidth": false,    <!-- 固定宽度 -->
+        });
+});
+
+function proposeplot() {
+        var prochart1 = echarts.init(document.getElementById('profig1'));//业务申请数量时间
+        var prochart2 = echarts.init(document.getElementById('profig2'));//车辆类型
+        var jspiedata = [];
+
+        var chart1op = {
+            title:{},
+            legend:{},
+            xAxis:{
+                data:{{ pro_date_list | safe }}
+            },
+            yAxis:{},
+            tooltip:{},
+            series:[{
+                name:'业务申请数量变化',
+                type:'line',
+                data:{{ pro_date_c | safe }}
+            }],
+        };
+        var chart2op = {
+            title:{},
+            legend:{
+                data:{{ pro_type_list | safe }}
+            },
+            tooltip:{},
+            series:[{
+                type:'pie',
+                data: {{ pie_data | safe }}
+            }]
+        };
+        prochart1.setOption(chart1op);
+        prochart2.setOption(chart2op);
+    }
+    proposeplot();
+</script>
+{% endblock %}

@@ -1,0 +1,293 @@
+{% extends 'basenew.html' %}
+{% load static %}
+{% block title %}司机信息{% endblock %}
+{% block css%}
+    <!-- The table theme-->
+  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+<!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+{% endblock %}
+{% block content %}
+
+    <section class="content-header">
+      <h1>
+        司机管理
+        <small>info</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'TransportationManagement:driver' %}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">司机信息</li>
+      </ol>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="box box-soild">
+            <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">司机信息<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="box-body">
+                        <div class="col-md-4">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">司机年龄分布：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="driverfig1" style="width: 300px;height:200px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">司机性别分布：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="driverfig2" style="width: 300px;height:200px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">雇佣时间分布：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="driverfig3" style="width: 300px;height:200px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">司机总表</h3>
+                    <button class="btn  btn-primary pull-right" id="newDriver">增加</button>
+                    <button class="btn  pull-right" id="changeDriver" >修改</button>
+                    <button class="btn  pull-right" id="deleteDriver" >删除</button>
+                </div>
+                <div class="box-body">
+                    <table id="driver_table" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>姓名</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>电话号码</th>
+                            <th>雇佣时间</th>
+                            <th>是否在职</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for driver in driver_list %}
+                            <tr>
+{#                            <td>{{ forloop.counter }}</td>#}
+                                <td>{{ driver.id }}</td>
+                                <td>{{ driver.DName }}</td>
+                                {% if driver.DSex == True %}
+                                    <td class="text-yellow text-bold">男</td>
+                                    {% else %}
+                                    <td class="text-purple text-bold">女</td>
+                                {% endif %}
+                                <td>{{ driver.DAge }}</td>
+                                <td>{{ driver.PhoneNum }}</td>
+                                <td>{{ driver.Hiredata | date:"Y/m/d"}}</td>
+                                {% if driver.isAvailable == True %}
+                                    <td class="text-green text-bold">在职</td>
+                                    {% else %}
+                                    <td class="text-red text-bold">离职</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>编号</th>
+                            <th>姓名</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>电话号码</th>
+                            <th>雇佣时间</th>
+                            <th>是否在职</th>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+{% endblock %}
+{% block script %}
+
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- SlimScroll -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- page script -->
+
+<script>
+    $(function () {
+            $('#driver_table').DataTable({
+              "paging": true,       <!-- 允许分页 -->
+              "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+              "searching": true,    <!-- 允许内容搜索 -->
+              "ordering": true,     <!-- 允许排序 -->
+              "info": true,         <!-- 显示信息 -->
+              "autoWidth": false,    <!-- 固定宽度 -->
+            });
+    });
+    function driverplot() {
+            var driverchart1 = echarts.init(document.getElementById('driverfig1'));//司机年龄分布
+            var driverchart2 = echarts.init(document.getElementById('driverfig2'));//司机性别分布
+            var driverchart3 = echarts.init(document.getElementById('driverfig3'));//雇佣时间分布
+
+            var chart1op = {
+                title:{},
+                legend:{
+                    data: {{ age_list | safe }}
+                },
+                tooltip:{
+                    trigger: 'item',
+                    show:true,
+                    formatter: "{a} {b} : {c}",
+                },
+                xAxis:{
+                    data: {{ age_list | safe }},
+                    },
+                yAxis:{},
+                series:[{
+                   name:'数量',
+                   type:'bar',
+                    data:{{ age_c | safe }},
+                    markPoint:{
+                        data:[
+                            {type:'max', name:'最大值', itemStyle:{normal: {color: 'red'}}},
+                            {type:'min', name:'最小值', itemStyle:{normal: {color: 'gray'}}}
+                        ],
+                    },
+                    markLine:{
+                        data:[
+                            {type:'average', name:'平均值', itemStyle: {nomal: {color: 'green'}}}
+                        ],
+                    }
+                }],
+            };
+            var chart2op = {
+                title:{
+            },
+            legend:{
+                data:['男', '女']
+            },
+            tooltip:{
+                trigger: 'item',
+                show:true,
+                formatter: "{a} {b} : {c} ({d}%)",
+            },
+            series:[
+                {
+                    name:'数量',
+                    type:'pie',
+                    data: [
+                        {value: {{ male_num }}, name:'男'},
+                        {value: {{ female_num }}, name:'女'}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+            };
+            var chart3op = {
+                title:{
+                },
+                legend:{
+                    data: {{ date_list | safe }}
+                },
+                tooltips:{
+                    trigger: 'item',
+                    show:true,
+                    formatter: "{a} : {b} ({c})",
+                },
+                xAxis:{
+                    text: '年龄',
+                    data: {{ date_list | safe }}
+                },
+                yAxis:{},
+                series:[{
+                    name:'数量',
+                    type:'line',
+                    data: {{ date_c | safe }},
+                    markPoint:{
+                        data:[
+                            {type: 'max', name:'最大值', itemStyle:{normal: {color: 'red'}}},
+                            {type: 'min', name:'最小值', itemStyle:{normal: {color: 'gray'}}},
+                        ]
+                    },
+                    markLine: {
+                        data:[
+                            {type: 'average', name: '平均值', itemStyle:{normal: {color: 'green'}}},
+                        ]
+                    },
+                    areaStyle:{}
+            }],
+            };
+            driverchart1.setOption(chart1op);
+            driverchart2.setOption(chart2op);
+            driverchart3.setOption(chart3op);
+        }
+    driverplot();
+</script>
+
+{%  endblock %}

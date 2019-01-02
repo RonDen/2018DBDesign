@@ -1,5 +1,5 @@
 from django import forms
-from TransportationManagement.models import Car, Driver, Proposer
+from TransportationManagement.models import Car, Driver, Proposer, Accident, Record
 
 
 class UserForm(forms.Form):
@@ -15,15 +15,31 @@ class RegisterForm(forms.Form):
     pass
 
 
-class DriverForm(forms.Form):
-    pass
-
-
-class CarForm(forms.Form):
+class DriverForm(forms.ModelForm):
     class Meta:
-        car = Car
-        fields = ['CNo', 'CType', 'COiConsumpution']
+        model = Driver
+        fields = '__all__'
 
 
-class ProposerForm(forms.Form):
-    pass
+class CarForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = '__all__'
+
+
+class ProposerForm(forms.ModelForm):
+    class Meta:
+        model = Proposer
+        exclude = ['Date']
+
+
+class RecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        fields = '__all__'
+
+
+class AccidentForm(forms.ModelForm):
+    class Meta:
+        model = Accident
+        fields = '__all__'
