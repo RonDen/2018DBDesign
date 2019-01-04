@@ -1,8 +1,10 @@
-from TransportationManagement.models import Driver, Car, Accident, Record, Proposer
+from datetime import timedelta
 from random import randint, choice, choices
+
 from createUser import the_name_list
 from django.utils import timezone
-from datetime import timedelta
+
+from TransportationManagement.models import Driver, Car, Accident, Record, Proposer
 
 choice_list = ['豫B', '冀D', '豫E', '辽K', '皖A', '新B', '鲁N']
 type_list = ['大型车', '中型车', '小型车', '公交车', '长途车']
@@ -59,9 +61,9 @@ def add_record(num):
     drivers = choices(driver_set, k=num)
     for car, driver in zip(cars, drivers):
         cno, ctype, dno, dname = car.CNo, car.CType, driver.id, driver.DName
-        stime = timezone.now() - timedelta(days=randint(10, 1000))
+        etime = timezone.now() - timedelta(days=randint(10, 1000))
         days = randint(5, 60)
-        etime = stime + timedelta(days=days)
+        stime = etime - timedelta(days=days)
         oil = days * coil_comsuption[ctype]
         try:
             Record.objects.create(CNo=car, DName=dname, DNo=driver, STime=stime, ETime=etime, OilConsumpution=oil, isDelete=False)
@@ -95,7 +97,7 @@ def add_accident(num):
 
 
 if __name__ == '__main__':
-    # add_car(100)
+    # add_car(1000)
     # add_driver(200)
     # add_proposer(500)
     add_record(500)

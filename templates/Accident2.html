@@ -3,15 +3,296 @@
 {% block title %}事故信息{% endblock %}
 {% block css%}
     <!-- The table theme-->
-  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
-<!-- Theme style -->
-  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+    {#  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">#}
+    {#<!-- Theme style -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">#}
+    {#  <!-- AdminLTE Skins. Choose a skin from the css/skins#}
+    {#       folder instead of downloading all of them to reduce the load. -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">#}
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+
+    <script>
+        function formValidation() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.addAccidentForm.zdid.value === '') {
+                alert('请输入司机工号！');
+                return false;
+            }
+            if (!re.test((document.addAccidentForm.zdid.value))) {
+                alert('司机工号为数字！');
+                return false;
+            }
+            if ((document.addAccidentForm.zcno.value === '')) {
+                alert("请输入肇事车牌号码！");
+                return false;
+            }
+            if ((document.addAccidentForm.scno.value === '')) {
+                alert("请输入事故车牌号码！");
+                return false;
+            }
+            if ((document.addAccidentForm.stime.value === '')) {
+                alert("请输入事故时间！");
+                return false;
+            }
+            if ((document.addAccidentForm.spot.value === '')) {
+                alert("请输入事故地点！");
+                return false;
+            }
+            if ((document.addAccidentForm.cause.value === '')) {
+                alert("请输入事故原因！");
+                return false;
+            }
+            if ((document.addAccidentForm.money.value === '')) {
+                alert("请输入赔偿金额！");
+                return false;
+            }
+            if (!re.test((document.addAccidentForm.money))) {
+                alert("赔偿金额为数字！");
+                return false;
+            }
+            return true;
+        }
+
+        function formValidation2() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.changeAccidentForm.did.value === '') {
+                alert('请输入司机工号！');
+                return false;
+            }
+            if (!re.test((document.changeAccidentForm.did.value))) {
+                alert('司机工号为数字！');
+                return false;
+            }
+            if ((document.changeAccidentForm.zcno.value === '')) {
+                alert("请输入肇事车牌号码！");
+                return false;
+            }
+            if ((document.changeAccidentForm.scno.value === '')) {
+                alert("请输入事故车牌号码！");
+                return false;
+            }
+            if ((document.changeAccidentForm.stime.value === '')) {
+                alert("请输入事故时间！");
+                return false;
+            }
+            if ((document.changeAccidentForm.spot.value === '')) {
+                alert("请输入事故地点！");
+                return false;
+            }
+            if ((document.changeAccidentForm.cause.value === '')) {
+                alert("请输入事故原因！");
+                return false;
+            }
+            if ((document.changeAccidentForm.money.value === '')) {
+                alert("请输入赔偿金额！");
+                return false;
+            }
+            if ((document.changeAccidentForm.isdelete.value === '')) {
+                alert("请输入是否删除！");
+                return false;
+            }
+            if (!((document.changeAccidentForm.isdelete.value === '正常') || (document.changeAccidentForm.isdelete.value === '删除'))) {
+                alert("请输入删除或正常！");
+                return false;
+            }
+            if (!re.test((document.changeAccidentForm.money))) {
+                alert("赔偿金额为数字！");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
 {% endblock %}
 
 {% block content %}
+
+    <div class="modal fade" id="changeAccident">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:changeaccident' %}" method="post"
+                      name="changeAccidentForm" onsubmit="return(false);">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">修改事故记录</h4>
+                    </div>
+                    <div class="modal-body" id="changeAccidentModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="changeAccidentZDid" class="col-sm-2 control-label">肇事司机编号：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentZDid" class="form-control" name="zdid"
+                                           placeholder="12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentZDName" class="col-sm-2 control-label">肇事司机姓名：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentZDName" class="form-control" name="zdname"
+                                           placeholder="12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentZCNo" class="col-sm-2 control-label">肇事车牌号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentZCNo" class="form-control" name="zcno"
+                                           placeholder="新B7791">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentSCNo" class="col-sm-2 control-label">事故车牌号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentSCNo" class="form-control" name="scno"
+                                           placeholder="辽K8274">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentSTime" class="col-sm-2 control-label">事故时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentSTime" class="form-control" name="stime"
+                                           placeholder="2016/08/13">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentSpot" class="col-sm-2 control-label">事故地点：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentSpot" class="form-control" name="spot"
+                                           placeholder="立交桥">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentCause" class="col-sm-2 control-label">事故原因：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentCause" class="form-control" name="cause"
+                                           placeholder="不详">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentMoney" class="col-sm-2 control-label">赔偿金额：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentMoney" class="form-control" name="money"
+                                           placeholder="3000">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeAccidentDelete" class="col-sm-2 control-label">是否删除：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeAccidentDelete" class="form-control" name="isdelete"
+                                           placeholder="正常/删除">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelChange" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToChange" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addAccident">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:addaccident' %}" method="post"
+                      name="addAccidentForm" onsubmit="return(formValidation());">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">新增事故记录</h4>
+                    </div>
+                    <div class="modal-body" id="addAccidentModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="addAccidentZDid" class="col-sm-2 control-label">肇事司机编号：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentZDid" class="form-control" name="zdid"
+                                           placeholder="12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAccidentZCNo" class="col-sm-2 control-label">肇事车牌号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentZCNo" class="form-control" name="zcno"
+                                           placeholder="新B7791">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAccidentSCNo" class="col-sm-2 control-label">事故车牌号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentSCNo" class="form-control" name="scno"
+                                           placeholder="辽K8274">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAccidentSTime" class="col-sm-2 control-label">事故时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentSTime" class="form-control" name="stime"
+                                           placeholder="2016/08/13">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAccidentSpot" class="col-sm-2 control-label">事故地点：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentSpot" class="form-control" name="spot"
+                                           placeholder="立交桥">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAccidentCause" class="col-sm-2 control-label">事故原因：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentCause" class="form-control" name="cause"
+                                           placeholder="不详">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addAccidentmoney" class="col-sm-2 control-label">赔偿金额：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addAccidentCause" class="form-control" name="money"
+                                           placeholder="3000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelAdd" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToAdd" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteAccident" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">确认删除该事故信息？</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="sureToDelete" type="button" class="btn btn-danger">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="content-header">
       <h1>
@@ -28,7 +309,9 @@
         <div class="col-md-12">
             <div class="box-header">
                         <i class="fa fa-bar-chart-o"></i>
-                        <h3 class="box-title">运营记录分析<small>(%)</small></h3>
+                <h3 class="box-title">事故记录分析
+                    <small>(%)</small>
+                </h3>
 
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -134,9 +417,17 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">事故总表</h3>
-                    <button class="btn  btn-primary pull-right" id="newAccident">增加</button>
-                    <button class="btn  pull-right" id="changeAccident" >修改</button>
-                    <button class="btn  pull-right" id="deleteAccident" >删除</button>
+                    <div class="btn-group pull-right ">
+                        <button id='add' class="btn btn-primary" type="button">
+                            <span class="glyphicon glyphicon-plus"></span>增加
+                        </button>
+                        <button id='change' class="btn btn-info" type="button">
+                            <span class="glyphicon glyphicon-pencil"></span>修改
+                        </button>
+                        <button id='delete' class="btn btn-success" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>删除
+                        </button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <table id="accident_table" class="table table-bordered table-striped">
@@ -197,8 +488,6 @@
 </section>
 {% endblock %}
 
-
-
 {% block script %}
     <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
@@ -216,15 +505,199 @@
 
 
 $(function () {
-        $('#accident_table').DataTable({
+
+    var table = $('#accident_table').DataTable({
           "paging": true,       <!-- 允许分页 -->
           "lengthChange": true, <!-- 允许改变每页显示的行数 -->
           "searching": true,    <!-- 允许内容搜索 -->
           "ordering": true,     <!-- 允许排序 -->
           "info": true,         <!-- 显示信息 -->
           "autoWidth": false,    <!-- 固定宽度 -->
-        });
+        "language": {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            },
+            "oAria": {
+                "sSortAscending": ": 以升序排列此列",
+                "sSortDescending": ": 以降序排列此列"
+            }
+        },
+        "columnDefs": [{
+            "searchable": false,
+            "orderable": true,
+            "targets": 0
+        }],
+        "order": [[0, 'asc']]
+    });
+
+    $('#accident_table tbody').on('click', 'tr', function (e) {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+
+    $('#add').click(function () {
+        console.log("new car.");
+        $('#addAccident').modal();
+    });
+
+    $('#change').click(function () {
+        console.log("change car");
+        if (table.rows('.selected').data().length) {
+            $("#changeAccident").modal();
+            var rowData = table.rows('.selected').data()[0];
+            var inputs = $('#changeAccident').find('input');
+            for (let i = 0; i < inputs.length; i++) {
+                $(inputs[i]).val(rowData[i]);
+            }
+        } else {
+            alert("请选择一个项目！");
+        }
+    });
+
+    $('#sureToChange').click(function () {
+        console.log('sure change.');
+
+        var rowData = table.rows('.selected').data()[0];
+        const aid = rowData[0];
+        const zdid = $('#changeAccidentZDid').val();
+        const zdname = $('#changeAccidentZDName').val();
+        const zcno = $('#changeAccidentZCNo').val();
+        const scno = $('#changeAccidentSCNo').val();
+        const stime = $('#changeAccidentSTime').val();
+        const spot = $('#changeAccidentSpot').val();
+        const cause = $('#changeAccidentCause').val();
+        const money = $('#changeAccidentMoney').val();
+        const isdelete = $('#changeAccidentDelete').val();
+
+        function val() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (zdid === '') {
+                alert('请输入肇事司机工号！');
+            }
+            if (zdname === '') {
+                alert('请输入肇事司机姓名！');
+            }
+            if (!re.test((zdid))) {
+                alert('司机工号为数字！');
+            }
+            if (zcno === '') {
+                alert("请输入肇事车牌号码！");
+            }
+            if (scno === '') {
+                alert("请输入事故车牌号码！");
+            }
+            if (stime === '') {
+                alert("请输入事故时间！");
+            }
+            if (spot === '') {
+                alert("请输入事故地点！");
+            }
+            if (cause === '') {
+                alert("请输入事故原因！");
+            }
+            if (isdelete === '') {
+                alert("请输入是否删除！");
+            }
+            if (!((isdelete === '正常') || (isdelete === '删除'))) {
+                alert("请输入正常或删除！");
+            }
+        }
+
+        val();
+
+        data = {
+            'aid': aid,
+            'zdid': zdid,
+            'zdname': zdname,
+            'zcno': zcno,
+            'scno': scno,
+            'stime': stime,
+            'spot': spot,
+            'cause': cause,
+            'money': money,
+            'isdelete': isdelete === '删除'
+        };
+        console.log(data);
+        $.get(
+            "{% url 'TransportationManagement:changeaccident' %}",
+            data,
+            function (rec) {
+                if (rec['failed']) {
+                    alert("修改失败！请检查输入。");
+                } else {
+                    const newzdid = rec['newzdid'];
+                    const newzdname = rec['newzdname'];
+                    const newzcno = rec['newzcno'];
+                    const newscno = rec['newscno'];
+                    const newstime = rec['newstime'];
+                    const newspot = rec['newspot'];
+                    const newcause = rec['newcause'];
+                    const newmoney = rec['newmoney'];
+                    alert(rec['newdelete']);
+                    const newdelete = rec['newdelete'] ? '删除' : '正常';
+                    var tds = Array.prototype.slice.call($('.selected td'));
+                    tds[1].innerHTML = newzdid;
+                    tds[2].innerHTML = newzdname;
+                    tds[3].innerHTML = newzcno;
+                    tds[4].innerHTML = newscno;
+                    tds[5].innerHTML = newstime;
+                    tds[6].innerHTML = newspot;
+                    tds[7].innerHTML = newcause;
+                    tds[8].innerHTML = newmoney;
+                    tds[9].innerHTML = newdelete;
+                    alert('修改成功！');
+                }
+            }
+        );
+    });
+
+    $('#delete').click(function () {
+        console.log("delete car");
+        if (table.rows('.selected').data().length) {
+            $("#deleteAccident").modal();
+            $('#sureToDelete').click(function () {
+                var rowData = table.rows('.selected').data()[0];
+                const aid = rowData[0];
+                const data = {'aid': aid};
+                $.get('{% url 'TransportationManagement:deleteaccident' %}',
+                    data,
+                    function (rec, status) {
+                        if (status === 'success') {
+                            alert("删除成功！");
+                            table.row('.selected').remove().draw(false);
+                        } else {
+                            alert('删除失败！');
+                        }
+                    }
+                );
+            });
+        } else {
+            alert("请选择一个要删除的项目。");
+        }
+
+    });
 });
+
 function accidentplot() {
         var accchart1 = echarts.init(document.getElementById('accfig1'));//事故时间
         var accchart2 = echarts.init(document.getElementById('accfig2'));//事故地点

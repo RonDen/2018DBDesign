@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from . import views
 
+from . import views
 
 app_name = 'TransportationManagement'
 urlpatterns = [
@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^changerecord/$', views.change_record, name='changerecord'),
     url(r'^deleterecord/$', views.delete_record, name='deleterecord'),
     url(r'^addaccident/$', views.add_accident, name='addaccident'),
-    url(r'^changeaccident/$', views.delete_car, name='changeaccident'),
+    url(r'^changeaccident/$', views.change_accident, name='changeaccident'),
     url(r'^deleteaccident/$', views.delete_accident, name='deleteaccident'),
+    url(r'^ajax_get/$', views.ajax_get, name='ajax_get'),
 
 ]

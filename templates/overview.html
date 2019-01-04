@@ -397,12 +397,10 @@
         {% endfor %}
         var type_num_data = [];
         for (var i = 0; i < nums.length; i ++){
-            {#type_num_data.push({types[i]: nums[i]});#}
             obj = {};
             obj['value'] = nums[i];
             obj['name'] = types[i];
             type_num_data.push(obj);
-            {#type_num_dict[types[i]] = nums[i];#}
             delete obj;
             console.log(types[i], nums[i]);
         }
@@ -421,13 +419,13 @@
                 right: 10,
                 top: 20,
                 bottom: 20,
-                data: {{ pie_car_aviable | safe }},
+                data: {{ pie_type | safe }},
             },
             series: [
                 {
                 name:'数量',
                 type:'pie',
-                data: {{ pie_car_aviable | safe }},
+                    data: {{ pie_type | safe }},
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -441,10 +439,9 @@
         var chart2op = {
             baseOption:{
             title:{
-                text:'不同种类车辆数',
             },
             legend:{
-                data:types,
+                data: nums
             },
             xAxis:{
                 data:types
@@ -500,7 +497,6 @@
         };
         var chart3op = {
             title:{
-                text:'车辆维修情况',
                 x: 'center'
             },
             tooltip:{
@@ -544,7 +540,7 @@
             var chart1op = {
                 title:{},
                 legend:{
-                    data: {{ age_list | safe }}
+                    data: {{ age_c | safe }}
                 },
                 tooltip:{
                     trigger: 'item',
@@ -576,7 +572,7 @@
                 title:{
             },
             legend:{
-                data:['男', '女']
+                data: [{{ male_num | safe }}, {{ female_num | safe }}]
             },
             tooltip:{
                 trigger: 'item',
@@ -605,7 +601,7 @@
                 title:{
                 },
                 legend:{
-                    data: {{ date_list | safe }}
+                    data: {{ date_c | safe }}
                 },
                 tooltips:{
                     trigger: 'item',
@@ -631,17 +627,18 @@
                         data:[
                             {type: 'average', name: '平均值', itemStyle:{normal: {color: 'green'}}},
                         ]
-                    }
+                    },
+                    areaStyle: {}
             }],
             };
             driverchart1.setOption(chart1op);
             driverchart2.setOption(chart2op);
             driverchart3.setOption(chart3op);
         }
-
     function proposeplot() {
         var prochart1 = echarts.init(document.getElementById('profig1'));//业务申请数量时间
         var prochart2 = echarts.init(document.getElementById('profig2'));//车辆类型
+
         var chart1op = {
             title:{},
             legend:{},
@@ -653,13 +650,25 @@
             series:[{
                 name:'业务申请数量变化',
                 type:'line',
-                data:{{ pro_date_c | safe }}
+                data:{{ pro_date_c | safe }},
+                areaStyle: {},
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值', itemStyle: {normal: {color: 'red'}}},
+                        {type: 'min', name: '最小值', itemStyle: {normal: {color: 'gray'}}}
+                    ],
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值', itemStyle: {nomal: {color: 'green'}}}
+                    ],
+                }
             }],
         };
         var chart2op = {
             title:{},
             legend:{
-                data:{{ pro_type_list | safe }}
+                data:{{ pie_data | safe }}
             },
             tooltip:{},
             series:[{
@@ -676,7 +685,7 @@
         var chart1op = {
             title:{},
             legend:{
-                data:{{ oil_list | safe}}
+                data:{{ oil_count | safe}}
             },
             tooltip:{},
             xAxis:{
@@ -716,7 +725,7 @@
         var chart2op = {
           title: {},
           legend: {
-              data: {{ bins | safe }}
+              data: {{ c | safe }}
           },
           tooltip:{},
           xAxis: {
@@ -816,6 +825,7 @@
         accchart3.setOption(chart3op);
         accchart4.setOption(chart4op);
     }
+
     carplot();
     driverplot();
     proposeplot();

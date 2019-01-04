@@ -8,10 +8,12 @@
     <title>{% block title %}首页{% endblock %}</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    {#  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">#}
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="icon" href="data:;base64,=">
     <!-- Bootstrap 3.3.6 -->
+    <link rel="shortcut icon" href="{% static 'assets/ico/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'plugins/font-awesome-4.6.3/css/font-awesome.min.css' %}">
@@ -21,8 +23,8 @@
     <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
 
     <script src="{% static 'js/echarts.js' %}"></script>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    {#    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>#}
+    {#    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>#}
 {% block css %}{% endblock %}
 </head>
 
@@ -47,30 +49,18 @@
 
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <!-- Messages: style can be found in dropdown.less-->
-          <li class="dropdown messages-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">4</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">此功能暂缺</li>
-            </ul>
-          </li>
           <!-- Notifications: style can be found in dropdown.less -->
           <li class="dropdown notifications-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span>
+              <a href="\admin\" target="_blank" class="dropdown-toggle">
+                  <i class="fa fa-bank"></i>
+                  <span>Admin</span>
             </a>
-            <ul class="dropdown-menu">
-              <li class="header">此功能暂缺</li>
-            </ul>
           </li>
           <!-- Tasks: style can be found in dropdown.less -->
           <li class="dropdown tasks-menu">
             <a href="{% url 'TransportationManagement:mylogout' %}">
-              <i class="fa fa-fast-backward" href="{% url 'TransportationManagement:mylogout' %}"></i>
+                <i class="fa fa-coffee" href="{% url 'TransportationManagement:mylogout' %}"></i>
+                <span>logout</span>
             </a>
 {#            <ul class="dropdown-menu">#}
 {#              <li class="header" href="{% url 'TransportationManagement:mylogout' %}">登出</li>#}

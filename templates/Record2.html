@@ -3,15 +3,250 @@
 {% block title %}运营记录{% endblock %}
 {% block css%}
     <!-- The table theme-->
-  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
-<!-- Theme style -->
-  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+    {#  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">#}
+    {#<!-- Theme style -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">#}
+    {#  <!-- AdminLTE Skins. Choose a skin from the css/skins#}
+    {#       folder instead of downloading all of them to reduce the load. -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">#}
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+
+    <script>
+        function formValidation() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.addRecordForm.did.value === '') {
+                alert('请输入司机工号！');
+                return false;
+            }
+            if (!re.test((document.addRecordForm.did.value))) {
+                alert('司机工号为数字！');
+                return false;
+            }
+            if ((document.addRecordForm.cno.value === '')) {
+                alert("请输入车牌号码！");
+                return false;
+            }
+            if ((document.addRecordForm.stime.value === '')) {
+                alert("请输入开始时间！");
+                return false;
+            }
+            if ((document.addRecordForm.etime.value === '')) {
+                alert("请输入结束时间！");
+                return false;
+            }
+            if ((document.addRecordForm.oil.value === '')) {
+                alert("请输入耗油量！");
+                return false;
+            }
+            return true;
+        }
+
+        function formValidation2() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.changeRecordForm.did === '') {
+                alert('请输入司机工号！');
+                return false;
+            }
+            if (document.changeRecordForm.dname === '') {
+                alert('请输入司机姓名！');
+                return false;
+            }
+            if (!re.test((document.changeRecordForm.did))) {
+                alert('司机工号为数字！');
+                return false;
+            }
+            if ((document.changeRecordForm.cno === '')) {
+                alert("请输入车牌号码！");
+                return false;
+            }
+            if ((document.changeRecordForm.stime.value === '')) {
+                alert("请输入开始时间！");
+                return false;
+            }
+            if ((document.changeRecordForm.etime.value === '')) {
+                alert("请输入结束时间！");
+                return false;
+            }
+            if ((document.changeRecordForm.isdelete.value === '')) {
+                alert("请输入是否删除！");
+                return false;
+            }
+            if ((document.changeRecordForm.etime.value === '正常') || (document.changeRecordForm.etime.value === '删除')) {
+                alert("请输入正常或删除！");
+                return false;
+            }
+            if ((document.changeRecordForm.oil.value === '')) {
+                alert("请输入耗油量！");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
 {% endblock %}
 
 {% block content %}
+
+    <div class="modal fade" id="addRecord">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:addrecord' %}" method="post"
+                      name="addRecordForm" onsubmit="return(formValidation());">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">新增记录</h4>
+                    </div>
+                    <div class="modal-body" id="addRecordModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="addRecordDid" class="col-sm-2 control-label">司机编号：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="addRecordDid" class="form-control" name="did"
+                                           placeholder="12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addRecordCNo" class="col-sm-2 control-label">车牌号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addRecordCNo" class="form-control" name="cno"
+                                           placeholder="新B7791">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addRecordSTime" class="col-sm-2 control-label">开始时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addRecordSTime" class="form-control" name="stime"
+                                           placeholder="2016/08/13">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addRecordETime" class="col-sm-2 control-label">结束时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addRecordETime" class="form-control" name="etime"
+                                           placeholder="2017/10/31">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addRecordOil" class="col-sm-2 control-label">耗油量：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addRecordOil" class="form-control" name="oil"
+                                           placeholder="3000">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelAdd" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToAdd" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeRecord">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:changerecord' %}" method="post"
+                      name="changeRecordForm" onsubmit="return(false);">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">修改记录</h4>
+                    </div>
+                    <div class="modal-body" id="changeRecordModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="changeRecordDid" class="col-sm-2 control-label">司机编号：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordDid" class="form-control" name="did"
+                                           placeholder="12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeRecordName" class="col-sm-2 control-label">司机姓名：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordName" class="form-control" name="dname"
+                                           placeholder="张三">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeRecordCNo" class="col-sm-2 control-label">车牌号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordCNo" class="form-control" name="cno"
+                                           placeholder="新B7791">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeRecordSTime" class="col-sm-2 control-label">开始时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordSTime" class="form-control" name="stime"
+                                           placeholder="2016/08/13">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeRecordETime" class="col-sm-2 control-label">结束时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordETime" class="form-control" name="etime"
+                                           placeholder="2017/10/31">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeRecordOil" class="col-sm-2 control-label">耗油量：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordOil" class="form-control" name="oil"
+                                           placeholder="3000">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeRecordDelete" class="col-sm-2 control-label">是否删除：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeRecordDelete" class="form-control" name="isdelete"
+                                           placeholder="删除/正常">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelChange" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToChange" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteRecord" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">确认删除改记录信息？</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="sureToDelete" type="button" class="btn btn-danger">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <section class="content-header">
       <h1>
@@ -83,9 +318,17 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">记录总表</h3>
-                    <button class="btn  btn-primary pull-right" id="newRecord">增加</button>
-                    <button class="btn  pull-right" id="changeRecord" >修改</button>
-                    <button class="btn  pull-right" id="deleteRecord" >删除</button>
+                    <div class="btn-group pull-right ">
+                        <button id='add' class="btn btn-primary" type="button">
+                            <span class="glyphicon glyphicon-plus"></span>增加
+                        </button>
+                        <button id='change' class="btn btn-info" type="button">
+                            <span class="glyphicon glyphicon-pencil"></span>修改
+                        </button>
+                        <button id='delete' class="btn btn-success" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>删除
+                        </button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <table id="record_table" class="table table-bordered table-striped">
@@ -105,7 +348,7 @@
                             {% for record in record_list %}
                             <tr>
                                 <td>{{ record.id }}</td>
-                                <td>{{ record.DNo }}</td>
+                                <td>{{ record.DNo_id }}</td>
                                 <td>{{ record.DName }}</td>
                                 <td>{{ record.CNo }}</td>
                                 <td>{{ record.STime | date:"Y/m/d"}}</td>
@@ -156,15 +399,191 @@
 
 
 $(function () {
-        $('#record_table').DataTable({
+
+    var table = $('#record_table').DataTable({
           "paging": true,       <!-- 允许分页 -->
           "lengthChange": true, <!-- 允许改变每页显示的行数 -->
           "searching": true,    <!-- 允许内容搜索 -->
           "ordering": true,     <!-- 允许排序 -->
           "info": true,         <!-- 显示信息 -->
           "autoWidth": false,    <!-- 固定宽度 -->
-        });
+        "language": {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            },
+            "oAria": {
+                "sSortAscending": ": 以升序排列此列",
+                "sSortDescending": ": 以降序排列此列"
+            }
+        },
+        "columnDefs": [{
+            "searchable": false,
+            "orderable": true,
+            "targets": 0
+        }],
+        "order": [[0, 'asc']]
+    });
+
+    $('#record_table tbody').on('click', 'tr', function (e) {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+
+    $('#add').click(function () {
+        console.log("new car.");
+        $('#addRecord').modal();
+    });
+    $('#change').click(function () {
+        console.log("change car");
+        if (table.rows('.selected').data().length) {
+            $("#changeRecord").modal();
+            var rowData = table.rows('.selected').data()[0];
+            var inputs = $('#changeRecord').find('input');
+            for (let i = 0; i < inputs.length; i++) {
+                $(inputs[i]).val(rowData[i]);
+            }
+        } else {
+            alert("请选择一个项目！");
+        }
+    });
+
+    $('#sureToChange').click(function () {
+        console.log('sure change.');
+
+        var rowData = table.rows('.selected').data()[0];
+        const rid = rowData[0];
+        const did = $('#changeRecordDid').val();
+        const dname = $('#changeRecordName').val();
+        const cno = $('#changeRecordCNo').val();
+        const stime = $('#changeRecordSTime').val();
+        const etime = $('#changeRecordETime').val();
+        const oil = $('#changeRecordOil').val();
+        const isdelete = $('#changeRecordDelete').val();
+
+        function val() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (did === '') {
+                alert('请输入司机工号！');
+            }
+            if (dname === '') {
+                alert('请输入司机姓名！');
+            }
+            if (!re.test((did))) {
+                alert('司机工号为数字！');
+            }
+            if (cno === '') {
+                alert("请输入车牌号码！");
+            }
+            if (stime === '') {
+                alert("请输入开始时间！");
+            }
+            if (etime === '') {
+                alert("请输入结束时间！");
+            }
+            if (isdelete === '') {
+                alert("请输入是否删除！");
+            }
+            if ((isdelete === '正常') || (isdelete === '删除')) {
+                alert("请输入正常或删除！");
+            }
+            if ((oil === '')) {
+                alert("请输入耗油量！");
+            }
+            if (!re.test(oil)) {
+                alert('耗油量为数字！');
+            }
+        }
+
+        {#val();#}
+
+        data = {
+            'rid': rid,
+            'did': did,
+            'dname': dname,
+            'cno': cno,
+            'stime': stime.toString(),
+            'etime': etime.toString(),
+            'oil': oil,
+            'isdelete': isdelete === '删除'
+        };
+        console.log(data);
+        $.get(
+            "{% url 'TransportationManagement:changerecord' %}",
+            data,
+            function (rec) {
+                if (rec['failed' === 'True']) {
+                    alert("修改失败，请检查输入！");
+                } else {
+                    const newdid = rec['newdid'];
+                    const newdname = rec['newdname'];
+                    const newcno = rec['newcno'];
+                    const newstime = rec['newstime'];
+                    const newetime = rec['newetime'];
+                    const newoil = rec['newoil'];
+                    const newdelete = rec['newdelete'] ? '删除' : '正常';
+                    var tds = Array.prototype.slice.call($('.selected td'));
+                    tds[1].innerHTML = newdid;
+                    tds[2].innerHTML = newdname;
+                    tds[3].innerHTML = newcno;
+                    tds[4].innerHTML = newstime;
+                    tds[5].innerHTML = newetime;
+                    tds[6].innerHTML = newoil;
+                    tds[7].innerHTML = newdelete;
+                    alert('修改成功！');
+                }
+            }
+        );
+    });
+
+    $('#delete').click(function () {
+        console.log("delete proposer");
+        if (table.rows('.selected').data().length) {
+            $("#deleteRecord").modal();
+            $('#sureToDelete').click(function () {
+                var rowData = table.rows('.selected').data()[0];
+                //console.log(rowData);
+                const rid = rowData[0];
+                const data = {'rid': rid};
+                $.get('{% url 'TransportationManagement:deleterecord' %}',
+                    data,
+                    function (rec, status) {
+                        if (status === 'success') {
+                            table.row('.selected').remove().draw(false);
+                            alert('删除成功！');
+                        } else {
+                            alert('删除失败！');
+                        }
+                    }
+                );
+            });
+        } else {
+            alert("请选择一个要删除的项目。");
+        }
+    });
 });
+
+
+
 
 function recordplot() {
         var recordchart1 = echarts.init(document.getElementById('recordfig1'));//油耗分析

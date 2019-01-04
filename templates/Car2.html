@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% block title %}车辆信息{% endblock %}
 {% block css %}
+
 <!-- The table theme-->
 {#  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">#}
 {#<!-- Theme style -->#}
@@ -11,10 +12,63 @@
 {#  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">#}
 
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    {#    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">#}
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+
+    <script>
+        function formValidation() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.addCarForm.cno.value === '') {
+                alert('请输入车牌号！');
+                return false;
+            }
+            if (!(document.addCarForm.cno.value.length === 6)) {
+                alert("车牌号错误！");
+                return false;
+            }
+            if (document.addCarForm.ctype.value === '') {
+                alert('请输入车辆类型！');
+                return false;
+            }
+            if (document.addCarForm.coil.value === '') {
+                alert("请输入耗油量！");
+                return false;
+            }
+            if (!re.test(document.addCarForm.coil.value)) {
+                alert("耗油量必须为数字！");
+                return false;
+            }
+            return true;
+        }
+
+        function formValidation2() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.changeCarForm.cno.value === '') {
+                alert('请输入车牌号！');
+                return false;
+            }
+            if (!(document.changeCarForm.cno.value.length === 6)) {
+                alert("车牌号错误！");
+                return false;
+            }
+            if (document.changeCarForm.ctype.value === '') {
+                alert('请输入车辆类型！');
+                return false;
+            }
+            if (document.changeForm.coil.value === '') {
+                alert("请输入耗油量！");
+                return false;
+            }
+            if (!re.test(document.changeCarForm.coil.value)) {
+                alert("耗油量必须为数字！");
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 {% endblock %}
 {% block content %}
@@ -163,7 +217,8 @@
 <div class="modal fade" id="addCar">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form role="form" action="{% url 'TransportationManagement:addcar' %}" method="post">
+            <form role="form" action="{% url 'TransportationManagement:addcar' %}" method="post" name="addCarForm"
+                  onsubmit="return(formValidation());">
             <div class="modal-header">
                  <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">添加车辆</h4>
@@ -173,22 +228,17 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="addCarCNo" class="col-sm-2 control-label">车牌号：</label>
-{#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
                         <div class="col-sm-10">
-                            <input type="text" id="addCarCNo" class="form-control" name="cno" placeholder="京N-xxx">
+                            <input type="text" id="addCarCNo" class="form-control" name="cno" placeholder="京N1110">
                         </div>
                     </div>
                     <div class="form-group">
-{#                        <label for="{{ carForm.CType.id_for_label }}" class="col-sm-2 control-label">车辆类型：</label>#}
-{#                        <div class="col-sm-10">{{ carForm.CType }}</div>#}
                         <label for="addCarType" class="col-sm-2 control-label">车辆类型：</label>
                         <div class="col-sm-10">
                             <input type="text" id="addCarType" class="form-control" name="ctype" placeholder="大型车">
                         </div>
                     </div>
                     <div class="form-group">
-{#                        <label for="{{ carForm.COilConsumpution.id_for_label }}" class="col-sm-2 control-label">耗油量：</label>#}
-{#                        <div class="col-sm-10">{{ carForm.CType }}</div>#}
                         <label for="addCarOild" class="col-sm-2 control-label">耗油量：</label>
                         <div class="col-sm-10">
                             <input type="text" id="addCarOild" class="form-control" name="coil" placeholder="1000">
@@ -211,41 +261,46 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" name="changeForm"
+                        onsubmit="return(formValidation2());">&times;
+                </button>
                 <h4 class="modal-title">修改车辆信息</h4>
             </div>
             <div class="modal-body" id="addCarModal">
-                <div class="form-horizontal">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="changeCarCNo" class="col-sm-2 control-label">车牌号：</label>
-{#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
-                        <div class="col-sm-10">
-                            <input type="text" id="changeCarCNo" class="form-control">
+                <form action="{% url 'TransportationManagement:changecar' %}">
+                    <div class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="changeCarCNo" class="col-sm-2 control-label">车牌号：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeCarCNo" class="form-control" name="cno">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeCarType" class="col-sm-2 control-label">车辆类型：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeCarType" class="form-control" name="ctype">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeCarOild" class="col-sm-2 control-label">耗油量：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeCarOild" class="form-control" name="coil">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeCarAva" class="col-sm-2 control-label">是否可用：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeCarAva" class="form-control" name="isava">
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-{#                        <label for="{{ carForm.CType.id_for_label }}" class="col-sm-2 control-label">车辆类型：</label>#}
-{#                        <div class="col-sm-10">{{ carForm.CType }}</div>#}
-                        <label for="changeCarType" class="col-sm-2 control-label">车辆类型：</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="changeCarType" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group">
-{#                        <label for="{{ carForm.COilConsumpution.id_for_label }}" class="col-sm-2 control-label">耗油量：</label>#}
-{#                        <div class="col-sm-10">{{ carForm.CType }}</div>#}
-                        <label for="changeCarOild" class="col-sm-2 control-label">耗油量：</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="changeCarOild" class="form-control">
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <div class="center-block">
                     <button id="cancelChange" type="button" class="btn btn-default" data-dismiss="modal">取消修改</button>
-                    <button id="sureToChange" type="button" class="btn btn-success" data-dismiss="modal">保存修改</button>
+                    <button id="sureToChange" type="button" class="btn btn-success">保存修改</button>
                 </div>
             </div>
         </div>
@@ -261,11 +316,12 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button id="sureToDelete" type="button" class="btn btn-danger" data-dismiss="modal">删除</button>
+          <button id="sureToDelete" type="button" class="btn btn-danger">删除</button>
       </div>
     </div>
   </div>
 </div>
+
 
 </section>
 </section>
@@ -331,7 +387,7 @@
                 "orderable": true,
                 "targets": 0
             }],
-            "order": [[1, 'asc']]
+            "order": [[0, 'asc']]
         });
 
           $('#car_table tbody').on('click', 'tr', function (e) {
@@ -344,11 +400,11 @@
               }
           });
 
-
     $('#add').click(function () {
         console.log("new car.");
         $('#addCar').modal();
     });
+
     $('#change').click(function () {
         console.log("change car");
         if (table.rows('.selected').data().length) {
@@ -362,45 +418,83 @@
             alert("请选择一个项目！");
         }
     });
-
-    $('#sureToChange').click(function () {
-        console.log('sure change.');
-        var Cno = $('#changeCarCNo').val();
-        var CType = $("#changeCarType").val();
-        var COil = $('#changeCarOild').val();
-        var newRowData = [].concat(Cno, CType, COil);
-        var tds = Array.prototype.slice.call($('.selected td'));
-        for (let i = 0; i < tds.length-1; i ++) {
-            if (newRowData[i] !== '') {
-                tds[i+1].innerHTML = newRowData[i];
-            } else {
-                alert( '第' + i + '项内容不能为空');
-            }
-        }
-        console.log(tds.length);
-        tds[tds.length-1].innerHTML = '正常';
-    });
-    
-    $('#sureToAdd').click(function () {
-        console.log("sure add.");
-    });
           
     $('#delete').click(function () {
         console.log("delete car");
-        $("#deleteCar").modal();
+        if (table.rows('.selected').data().length) {
+            $("#deleteCar").modal();
+            $('#sureToDelete').click(function () {
+                var rowData = table.rows('.selected').data()[0];
+                const cno = rowData[1];
+                const data = {'cno': cno};
+                $.get('{% url 'TransportationManagement:deletecar' %}',
+                    data,
+                    function (rec, status) {
+                        if (status === 'success') {
+                            alert('删除成功');
+                            table.row('.selected').remove().draw(false);
+                        } else {
+                            alert('删除失败！');
+                        }
+                    }
+                );
+            });
+        } else {
+            alert("请选择一个要删除的项目。");
+        }
+
     });
-    
-    $('#sureToDelete').click(function () {
-        console.log('sure delete.');
-        table.row('.selected').remove().draw();
-    });
 
-});
+          $('#sureToChange').click(function () {
+              var rowData = table.rows('.selected').data()[0];
+              const cnoOld = rowData[1];
+              const cno = $('#changeCarCNo').val();
+              const ctype = $("#changeCarType").val();
+              const coil = $("#changeCarOild").val();
+              const isava = $('#changeCarAva').val();
+              var isgood;
+              if (isava === '正常') {
+                  isgood = true;
+              } else {
+                  isgood = false;
+              }
+              const data = {
+                  'cnoOld': cnoOld,
+                  'cno': cno,
+                  'ctype': ctype,
+                  'coil': coil,
+                  'isgood': isgood
+              };
+              $.get(
+                  '{% url 'TransportationManagement:changecar' %}',
+                  data,
+                  function (rec) {
+                      if (!rec) {
+                          alert('修改失败，车牌号重复');
+                      } else {
+                          var tds = Array.prototype.slice.call($('.selected td'));
+                          const newcno = rec['newcno'];
+                          const newctype = rec['newctype'];
+                          const newoil = rec['newoil'];
+                          var avg;
+                          console.log(rec['ava']);
+                          console.log(typeof (rec['ava']));
+                          if (rec['ava']) {
+                              avg = '正常';
+                          } else {
+                              avg = '故障'
+                          }
+                          tds[1].innerHTML = newcno;
+                          tds[2].innerHTML = newctype;
+                          tds[3].innerHTML = newoil;
+                          tds[4].innerHTML = avg;
+                          alert("修改成功");
+                      }
+                  }
+              );
+          });
 
-
-
-
-
+      })
 
       function carplot() {
         var carchart1 = echarts.init(document.getElementById('carfig1'));//车辆类别饼图
@@ -416,12 +510,10 @@
         {% endfor %}
         var type_num_data = [];
         for (var i = 0; i < nums.length; i ++){
-            {#type_num_data.push({types[i]: nums[i]});#}
             obj = {};
             obj['value'] = nums[i];
             obj['name'] = types[i];
             type_num_data.push(obj);
-            {#type_num_dict[types[i]] = nums[i];#}
             delete obj;
             console.log(types[i], nums[i]);
         }
@@ -440,13 +532,13 @@
                 right: 10,
                 top: 20,
                 bottom: 20,
-                data: {{ pie_car_aviable | safe }},
+                data: {{ pie_type | safe }},
             },
             series: [
                 {
                 name:'数量',
                 type:'pie',
-                data: {{ pie_car_aviable | safe }},
+                    data: {{ pie_type | safe }},
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -460,7 +552,6 @@
         var chart2op = {
             baseOption:{
             title:{
-                text:'不同种类车辆数',
             },
             legend:{
                 data:types,
@@ -519,7 +610,6 @@
         };
         var chart3op = {
             title:{
-                text:'车辆维修情况',
                 x: 'center'
             },
             tooltip:{
@@ -555,7 +645,8 @@
         carchart2.setOption(chart2op);
         carchart3.setOption(chart3op);
     }
-    //carplot();
+
+      carplot();
 
 
 </script>

@@ -1,16 +1,17 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from TransportationManagement.models import Driver,Car,Accident,Proposer,Record
-from django.db.models import Avg,Count,Min,Max,Sum, F, Q
-from django.db.models.functions import ExtractMonth, ExtractYear
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from .form import UserForm, CarForm, DriverForm, ProposerForm, AccidentForm, RecordForm
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from .form import UserForm
-from DBDesign import settings
 import numpy as np
+from django.contrib.auth import authenticate, login, logout, models
+from django.contrib.auth.decorators import login_required
+from django.db.models import Avg, Count, F
+from django.db.models.functions import ExtractMonth, ExtractYear
+from django.http import HttpResponse
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
+from DBDesign import settings
+from TransportationManagement.models import Driver, Car, Accident, Proposer, Record
+from .form import RegisterForm, CarForm, DriverForm, ProposerForm, AccidentForm, RecordForm
+from .form import UserForm
 
 
 def index(request):
@@ -22,6 +23,10 @@ def index(request):
     coach_num = len(Car.objects.filter(CType='长途车'))
     good_num = len(Car.objects.filter(isAvailable=True))
     bad_num = len(car_list) - good_num
+    type_group = Car.objects.all().values('CType').annotate(c=Count('CNo'))
+    pie_type = []
+    for item in type_group:
+        pie_type.append({'name': item['CType'], 'value': item['c']})
     pie_car_aviable = [
         {'name':'正常', 'value': good_num},
         {'name':'维修', 'value': bad_num}
@@ -119,6 +124,7 @@ def index(request):
     context = {
         'type_list': type_list,
         'num_list': num_list,
+        'pie_type': pie_type,
         'pie_car_aviable': pie_car_aviable,
         'date_list': date_list,
         'date_c': date_c,
@@ -169,10 +175,6 @@ def hello(request):
     return HttpResponse("Hello, nice to see you.")
     # return render(request, 'Accident.html')
 
-@login_required
-def overview(request):
-    pass
-
 
 def need_login(request):
     return render(request, 'login.html')
@@ -218,12 +220,45 @@ def send_email(email, code):
 
 
 def register(request):
-    return HttpResponse("zhucyem")
+    if request.session.get('is_login', None):
+        # 登录状态不允许注册。你可以修改这条原则！
+        return redirect("TransportationManagement:index")
+    if request.method == "POST":
+        register_form = RegisterForm(request.POST)
+        message = "请检查填写的内容！"
+        if register_form.is_valid():  # 获取数据
+            username = register_form.cleaned_data['username']
+            password1 = register_form.cleaned_data['password1']
+            password2 = register_form.cleaned_data['password2']
+            email = register_form.cleaned_data['email']
+            if password1 != password2:  # 判断两次密码是否相同
+                message = "两次输入的密码不同！"
+                return render(request, 'register.html', locals())
+            else:
+                same_name_user = models.User.objects.filter(username=username)
+                if same_name_user:  # 用户名唯一
+                    message = '用户已经存在，请重新选择用户名！'
+                    return render(request, 'register.html', locals())
+                same_email_user = models.User.objects.filter(email=email)
+                if same_email_user:  # 邮箱地址唯一
+                    message = '该邮箱地址已被注册，请使用别的邮箱！'
+                    return render(request, 'register.html', locals())
+
+                new_user = models.User.objects.create_user(username=username, email=email, password=password1)
+                new_user.save()
+                return redirect('TransportationManagement:login')  # 自动跳转到登录页面
+    register_form = RegisterForm()
+    return render(request, 'register.html', locals())
 
 
 @login_required
 def car(request):
     car_list = Car.objects.all()
+    type_group = Car.objects.all().values('CType').annotate(c=Count('CNo'))
+    pie_type = []
+    for item in type_group:
+        pie_type.append({'name': item['CType'], 'value': item['c']})
+
     big_car_num = len(Car.objects.filter(CType='大型车'))
     small_car_num = len(Car.objects.filter(CType='小型车'))
     middle_car_num = len(Car.objects.filter(CType='中型车'))
@@ -240,6 +275,7 @@ def car(request):
 
     carForm = CarForm()
     context = {
+        'pie_type': pie_type,
         'car_list': car_list,
         'type_list': type_list,
         'num_list': num_list,
@@ -252,24 +288,56 @@ def car(request):
 
 @login_required
 def add_car(request):
-    print("------------------------")
+    print("收到表单")
     ctype = request.POST.get('ctype')
     cno = request.POST.get('cno')
     coil = request.POST.get('coil')
-    print('ctype:', ctype)
-    print('cno:', cno)
-    print('coil:', coil)
+    Car.objects.update_or_create(CNo=cno, CType=ctype, COilConsumpution=int(coil))
+    print("创建成功")
     return redirect('TransportationManagement:car')
 
 
 @login_required
 def change_car(request):
-    pass
+    oldNO = request.GET.get('cnoOld')
+    newNo = request.GET.get('cno')
+    car = Car.objects.get(pk=oldNO)
+    ctype = request.GET.get('ctype')
+    coil = request.GET.get('coil')
+    isava = request.GET.get('isgood')
+    if isava == 'true':
+        isava = True
+    else:
+        isava = False
+    if oldNO != newNo:
+        print(oldNO, newNo)
+        try:
+            Car.objects.get(newNo)
+            return JsonResponse({})
+        except:
+            car.CNo = newNo
+    car.CType = ctype
+    car.COilConsumpution = int(coil)
+    car.isAvailable = isava
+    car.save()
+    data = {
+        'newcno': car.CNo,
+        'newctype': car.CType,
+        'newoil': car.COilConsumpution,
+        'ava': car.isAvailable
+    }
+    print(data)
+    return JsonResponse(data)
 
 
 @login_required
 def delete_car(request):
-    pass
+    cno = request.GET.get('cno')
+    car = get_object_or_404(Car, pk=cno)
+    print(car.CType, car.COilConsumpution)
+    data = {}
+    car.delete()
+    return JsonResponse(data)
 
 
 @login_required
@@ -309,17 +377,53 @@ def driver(request):
 
 @login_required
 def add_driver(request):
-    pass
+    print("收到表单")
+    dname = request.POST.get('name')
+    dsex = request.POST.get('sex') == '男'
+    dage = int(request.POST.get('age'))
+    dphone = request.POST.get('phone')
+    hiredate = request.POST.get('hiredate').replace('/', '-')
+    driver, is_create = Driver.objects.update_or_create(DName=dname, DSex=dsex, DAge=dage, PhoneNum=dphone,
+                                                        Hiredata=hiredate)
+    driver.save()
+    return redirect('TransportationManagement:driver')
 
 
 @login_required
 def change_driver(request):
-    pass
+    did = int(request.GET.get('did'))
+    dname = request.GET.get('dname')
+    dsex = request.GET.get('dsex') == '男'
+    dage = request.GET.get('dage')
+    dphone = request.GET.get('dphone')
+    dtime = request.GET.get('dtime').replace('/', '-')
+    dava = request.GET.get('dage') == 'true'
+    driver = get_object_or_404(Driver, pk=did)
+    driver.DName = dname
+    driver.DAge = dage
+    driver.DSex = dsex
+    driver.PhoneNum = dphone
+    driver.Hiredata = dtime
+    driver.isAvailable = dava
+    driver.save()
+    data = {
+        'newname': driver.DName,
+        'newsex': driver.DSex,
+        'newage': driver.DAge,
+        'newphone': driver.PhoneNum,
+        'newtime': driver.Hiredata,
+        'newava': driver.isAvailable
+    }
+    print(data)
+    return JsonResponse(data)
 
 
 @login_required
 def delete_driver(request):
-    pass
+    did = int(request.GET.get('did'))
+    driver = Driver.objects.get(pk=did)
+    driver.delete()
+    return JsonResponse({})
 
 
 
@@ -365,17 +469,69 @@ def record(request):
 
 @login_required
 def add_record(request):
-    pass
+    did = int(request.POST.get('did'))
+    cno = request.POST.get('cno')
+    stime = request.POST.get('stime').replace('/', '-')
+    etime = request.POST.get('etime').replace('/', '-')
+    oil = int(request.POST.get('oil'))
+    try:
+        dname = Driver.objects.get(pk=did).DName
+        car = Car.objects.get(pk=cno)
+    except:
+        return redirect('TransportationManagement:record')
+    record, iscreate = Record.objects.update_or_create(DNo_id=did, DName=dname, CNo=car, STime=stime, ETime=etime,
+                                                       OilConsumpution=oil)
+    record.save()
+    print("加入成功！")
+    return redirect('TransportationManagement:record')
 
 
 @login_required
 def change_record(request):
-    pass
+    rid = int(request.GET.get('rid'))
+    did = int(request.GET.get('rid'))
+    dname = request.GET.get('rid')
+    cno = request.GET.get('cno')
+    stime = request.GET.get('stime').replace('/', '-')
+    etime = request.GET.get('etime').replace('/', '-')
+    oil = int(request.GET.get('oil'))
+    isdelete = request.GET.get('isdelete') == 'true'
+    record = Record.objects.get(pk=rid)
+    try:
+        driver = Driver.objects.get(pk=did)
+        car = Car.objects.get(CNo=cno)
+        driver.DName = dname
+        car.CNo = cno
+        driver.save()
+        car.save()
+        record.DNo = driver
+        record.CNo = car
+        record.STime = stime
+        record.ETime = etime
+        record.OilConsumpution = oil
+        record.isDelete = isdelete
+        record.save()
+    except:
+        return JsonResponse({'failed': True})
+    data = {
+        'newdid': record.DNo_id,
+        'newdname': record.DName,
+        'newcno': record.CNo.CNo,
+        'newstime': record.STime,
+        'newetime': record.ETime,
+        'newoil': record.OilConsumpution,
+        'newdelete': record.isDelete
+    }
+    return JsonResponse(data)
+
 
 
 @login_required
 def delete_record(request):
-    pass
+    rid = int(request.GET.get('rid'))
+    record = Record.objects.get(pk=rid)
+    record.delete()
+    return JsonResponse({})
 
 
 @login_required
@@ -415,17 +571,48 @@ def proposer(request):
 
 @login_required
 def add_proposer(request):
-    pass
-
+    ctype = request.POST.get('ctype')
+    print(ctype)
+    print(request.POST.get('num'))
+    print(request.POST.get('mile'))
+    num = int(request.POST.get('num'))
+    mile = int(request.POST.get('mile'))
+    proposer, is_create = Proposer.objects.update_or_create(CType=ctype, Num=num, Mileage=mile)
+    proposer.save()
+    return redirect('TransportationManagement:addproposer')
 
 @login_required
 def change_proposer(request):
-    pass
+    pid = int(request.GET.get('pid'))
+    ctype = request.GET.get('ctype')
+    num = int(request.GET.get('num'))
+    mile = int(request.GET.get('mile'))
+    time = request.GET.get('time').replace('/', '-')
+    isrec = request.GET.get('isrce') == 'true'
+    proposer = Proposer.objects.get(pk=pid)
+    proposer.CType = ctype
+    proposer.Num = num
+    proposer.Mileage = mile
+    proposer.Date = time
+    proposer.isRecived = isrec
+    proposer.save()
+    data = {
+        'newctype': proposer.CType,
+        'newnum': proposer.Num,
+        'newmile': proposer.Mileage,
+        'newtime': proposer.Date,
+        'newrec': proposer.isRecived
+    }
+    print(data)
+    return JsonResponse(data)
 
 
 @login_required
 def delete_proposer(request):
-    pass
+    pid = int(request.GET.get('pid'))
+    proposer = get_object_or_404(Proposer, pk=pid)
+    proposer.delete()
+    return JsonResponse({})
 
 
 @login_required
@@ -481,15 +668,85 @@ def accident(request):
 
 @login_required
 def add_accident(request):
-    pass
+    zdid = int(request.POST.get('zdid'))
+    zcno = request.POST.get('zcno')
+    scno = request.POST.get('scno')
+    stime = request.POST.get('stime').replace('/', '-')
+    spot = request.POST.get('spot')
+    cause = request.POST.get('cause')
+    money = int(request.POST.get('money'))
+    try:
+        car = Car.objects.get(pk=zcno)
+        driver = Car.objects.get(pk=zdid)
+        accident, is_create = Accident.objects.update_or_create(ZSCNo=car, SGCNo=scno, ZSDNo=driver, Time=stime,
+                                                                Spot=spot, Cause=cause, Money=money)
+        accident.save()
+    except:
+        return JsonResponse({'failed': True})
+    return redirect('TransportationManagement:accident')
 
 
 @login_required
 def change_accident(request):
-    pass
+    aid = int(request.GET.get('aid'))
+    zdid = int(request.GET.get('zdid'))
+    zdname = request.GET.get('zdname')
+    zcno = request.GET.get('zcno')
+    scno = request.GET.get('scno')
+    stime = request.GET.get('stime').replace('/', '-')
+    spot = request.GET.get('spot')
+    cause = request.GET.get('cause')
+    money = int(request.GET.get('money'))
+    isdelete = request.GET.get('isdelete') == 'true'
+    accident = Accident.objects.get(pk=aid)
+    try:
+        driver = Driver.objects.get(pk=zdid)
+        car = Car.objects.get(pk=zcno)
+        driver.DName = zdname
+        driver.save()
+        accident.ZSCNo = car
+        accident.ZSDNo = driver
+        accident.ZSDName = driver.DName
+        accident.Time = stime
+        accident.SGCNo = scno
+        accident.Spot = spot
+        accident.Cause = cause
+        accident.Money = money
+        accident.isDelete = isdelete
+        accident.save()
+    except:
+        return JsonResponse({'failed': True})
+    data = {
+        'newzdid': accident.ZSDNo_id,
+        'newzdname': accident.ZSDName,
+        'newzcno': accident.ZSCNo.CNo,
+        'newscno': accident.SGCNo,
+        'newstime': accident.Time,
+        'newspot': accident.Spot,
+        'newcause': accident.Cause,
+        'newmoney': accident.Money,
+        'newdelete': accident.isDelete
+    }
+    return JsonResponse(data)
+
+
 
 
 @login_required
 def delete_accident(request):
-    pass
+    aid = int(request.GET.get('aid'))
+    accident = Accident.objects.get(pk=aid)
+    accident.delete()
+    return JsonResponse({})
 
+
+def ajax_get(request):
+    name = request.GET.get('name')
+    try:
+        car = Car.objects.get(pk=name)
+        ctype = car.CType
+    except:
+        ctype = 'Not exists'
+
+    data = {'name': name, 'ctype': ctype}
+    return JsonResponse(data)

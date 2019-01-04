@@ -1,16 +1,234 @@
 {% extends 'basenew.html' %}
 {% load static %}
 {% block title %}司机信息{% endblock %}
+
 {% block css%}
     <!-- The table theme-->
-  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
-<!-- Theme style -->
-  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+    {#  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">#}
+    {#<!-- Theme style -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">#}
+    {#  <!-- AdminLTE Skins. Choose a skin from the css/skins#}
+    {#       folder instead of downloading all of them to reduce the load. -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">#}
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+
+    <script>
+        function formValidation() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.addDriverForm.name.value === '') {
+                alert('请输入姓名！');
+                return false;
+            }
+            if ((document.addDriverForm.age.value === '')) {
+                alert("请输入年龄！");
+                return false;
+            }
+            if ((document.addDriverForm.sex.value === '')) {
+                alert('请输入司机性别！');
+                return false;
+            }
+            if ((document.addDriverForm.phone.value === '')) {
+                alert('请输入电话号码！');
+                return false;
+            }
+            if (!(document.addDriverForm.phone.value.length === 11)) {
+                alert('电话号码有误，必须为11位！');
+                return false;
+            }
+            if (!re.test(document.addDriverForm.age.value)) {
+                alert("年龄必须为数字！");
+                return false;
+            }
+            return true;
+        }
+
+        function formValidation2() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.changeDriverForm.name.value === '') {
+                alert('请输入姓名！');
+                return false;
+            }
+            if ((document.changeDriverForm.age.value === '')) {
+                alert("请输入年龄！");
+                return false;
+            }
+            if ((document.changeDriverForm.sex.value === '')) {
+                alert('请输入司机性别！');
+                return false;
+            }
+            if ((document.changeDriverForm.phone.value === '')) {
+                alert('请输入电话号码！');
+                return false;
+            }
+            if (!(document.changeDriverForm.phone.value.length === 11)) {
+                alert('电话号码有误，必须为11位！');
+                return false;
+            }
+            if (!((document.changeDriverForm.sex.value === '男') || (document.changeDriverForm.sex.value === '女'))) {
+                alert('性别必须为男或女！');
+                return false;
+            }
+            if (!re.test(document.changeDriverForm.age.value)) {
+                alert("年龄必须为数字！");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
 {% endblock %}
 {% block content %}
+
+    <div class="modal fade" id="addDriver">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:adddriver' %}" method="post"
+                      name="addDriverForm" onsubmit="return(formValidation());">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">新增司机</h4>
+                    </div>
+                    <div class="modal-body" id="addDriverModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="addDriverName" class="col-sm-2 control-label">姓名：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="addDriverName" class="form-control" name="name"
+                                           placeholder="张三">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDriverSex" class="col-sm-2 control-label">性别：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addDriverSex" class="form-control" name="sex"
+                                           placeholder="男">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDriverAge" class="col-sm-2 control-label">年龄：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addDriverAge" class="form-control" name="age"
+                                           placeholder="25">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDriverPhone" class="col-sm-2 control-label">电话号码：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addDriverPhone" class="form-control" name="phone"
+                                           placeholder="188...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addDriverHiredate" class="col-sm-2 control-label">雇佣时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addDriverHiredate" class="form-control" name="hiredate"
+                                           placeholder="例如：2017/11/22，可以为空，默认当前时间...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelAdd" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToAdd" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeDriver">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" name="changeDriverForm"
+                            onsubmit="return(formValidation2());">&times;
+                    </button>
+                    <h4 class="modal-title">修改司机信息</h4>
+                </div>
+                <div class="modal-body" id="changeDriverModal">
+                    <div class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="changeDriverName" class="col-sm-2 control-label">姓名：</label>
+                            {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                            <div class="col-sm-10">
+                                <input type="text" id="changeDriverName" class="form-control" name="name"
+                                       placeholder="张三">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeDriverSex" class="col-sm-2 control-label">性别：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeDriverSex" class="form-control" name="sex" placeholder="男">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeDriverAge" class="col-sm-2 control-label">年龄：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeDriverAge" class="form-control" name="age"
+                                       placeholder="25">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeDriverPhone" class="col-sm-2 control-label">电话号码：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeDriverPhone" class="form-control" name="phone"
+                                       placeholder="188...">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeDriverHiredate" class="col-sm-2 control-label">雇佣时间：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeDriverHiredate" class="form-control" name="hiredate"
+                                       placeholder="可以为空，默认当前时间...">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeDriverAva" class="col-sm-2 control-label">是否在职：</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="changeDriverAva" class="form-control" name="ava">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="center-block">
+                        <button id="cancelChange" type="button" class="btn btn-default" data-dismiss="modal">取消修改
+                        </button>
+                        <button id="sureToChange" type="button" class="btn btn-success">保存修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteDriver" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">确认删除该司机信息？</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="sureToDelete" type="button" class="btn btn-danger">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <section class="content-header">
       <h1>
@@ -101,9 +319,17 @@
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">司机总表</h3>
-                    <button class="btn  btn-primary pull-right" id="newDriver">增加</button>
-                    <button class="btn  pull-right" id="changeDriver" >修改</button>
-                    <button class="btn  pull-right" id="deleteDriver" >删除</button>
+                    <div class="btn-group pull-right ">
+                        <button id='add' class="btn btn-primary" type="button">
+                            <span class="glyphicon glyphicon-plus"></span>增加
+                        </button>
+                        <button id='change' class="btn btn-info" type="button">
+                            <span class="glyphicon glyphicon-pencil"></span>修改
+                        </button>
+                        <button id='delete' class="btn btn-success" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>删除
+                        </button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <table id="driver_table" class="table table-bordered table-striped">
@@ -175,15 +401,179 @@
 
 <script>
     $(function () {
-            $('#driver_table').DataTable({
-              "paging": true,       <!-- 允许分页 -->
-              "lengthChange": true, <!-- 允许改变每页显示的行数 -->
-              "searching": true,    <!-- 允许内容搜索 -->
-              "ordering": true,     <!-- 允许排序 -->
-              "info": true,         <!-- 显示信息 -->
-              "autoWidth": false,    <!-- 固定宽度 -->
-            });
+
+        var table = $('#driver_table').DataTable({
+            "paging": true,       <!-- 允许分页 -->
+            "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+            "searching": true,    <!-- 允许内容搜索 -->
+            "ordering": true,     <!-- 允许排序 -->
+            "info": true,         <!-- 显示信息 -->
+            "autoWidth": false,    <!-- 固定宽度 -->
+            "language": {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "显示 _MENU_ 项结果",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            },
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "order": [[0, 'asc']]
+        });
+
+        $('#driver_table tbody').on('click', 'tr', function (e) {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+
+        $('#add').click(function () {
+            console.log("new driver.");
+            $('#addDriver').modal();
+        });
+        $('#change').click(function () {
+            console.log("change car");
+            if (table.rows('.selected').data().length) {
+                $("#changeDriver").modal();
+                var rowData = table.rows('.selected').data()[0];
+                var inputs = $('#changeDriver').find('input');
+                for (let i = 0; i < inputs.length; i++) {
+                    $(inputs[i]).val(rowData[i]);
+                }
+            } else {
+                alert("请选择一个项目！");
+            }
+        });
+
+        $('#sureToChange').click(function () {
+            var rowData = table.rows('.selected').data()[0];
+            const did = rowData[0];
+            const dname = $('#changeDriverName').val();
+            const dsex = $('#changeDriverSex').val();
+            const dage = $('#changeDriverAge').val();
+            const dphone = $('#changeDriverPhone').val();
+            const dtime = $('#changeDriverHiredate').val();
+            const dava = ($('#changeDriverAva').val());
+
+            function val() {
+                var re = /^[0-9]+.?[0-9]*/;
+                if (dname === '') {
+                    alert('请输入姓名！');
+                }
+                if ((dage === '')) {
+                    alert("请输入年龄！");
+                }
+                if ((dsex === '')) {
+                    alert('请输入司机性别！');
+                }
+                if ((dphone === '')) {
+                    alert('请输入电话号码！');
+                    return false;
+                }
+                if ((dava === '')) {
+                    alert('请在职情况！');
+                }
+                if (!(dphone.length === 11)) {
+                    alert('电话号码有误，必须为11位！');
+                }
+                if (!((dsex === '男') || (dsex === '女'))) {
+                    alert('性别必须为男或女！');
+                }
+                if (!((dava === '在职') || (dava === '离职'))) {
+                    alert('请输入在职或者离职！');
+                }
+                if (!re.test(dage)) {
+                    alert("年龄必须为数字！");
+                }
+            }
+
+            val();
+            data = {
+                'did': did,
+                'dname': dname,
+                'dsex': dsex,
+                'dage': dage,
+                'dphone': dphone,
+                'dtime': dtime.toString(),
+                'dava': dava === '在职',
+            };
+
+            console.log(data);
+            $.get(
+                "{% url 'TransportationManagement:changedriver' %}",
+                data,
+                function (rec) {
+                    if (!rec) {
+                        alert('修改失败');
+                    } else {
+                        var tds = Array.prototype.slice.call($('.selected td'));
+                        tds[1].innerHTML = rec['newname'];
+                        tds[2].innerHTML = rec['newsex'] === 'True' ? '男' : '女';
+                        tds[3].innerHTML = rec['newage'];
+                        tds[4].innerHTML = rec['newphone'];
+                        tds[5].innerHTML = rec['newtime'];
+                        tds[6].innerHTML = rec['newava'] === 'True' ? '在职' : '离职';
+                        alert('修改成功');
+                    }
+                }
+            );
+
+
+        });
+
+
+        $('#delete').click(function () {
+            console.log("delete driver");
+            if (table.rows('.selected').data().length) {
+                $("#deleteDriver").modal();
+                $('#sureToDelete').click(function () {
+                    console.log("sure to delete the driver.");
+                    var rowData = table.rows('.selected').data()[0];
+                    const did = rowData[0];
+                    const data = {'did': did};
+                    $.get('{% url 'TransportationManagement:deletedriver' %}',
+                        data,
+                        function (rec, status) {
+                            if (status === 'success') {
+                                table.row('.selected').remove().draw(false);
+                                alert('删除成功！');
+                            } else {
+                                alert('删除失败！');
+                            }
+                        }
+                    );
+                });
+
+            } else {
+                alert("请选择一个要删除的项目。");
+            }
+        });
     });
+
     function driverplot() {
             var driverchart1 = echarts.init(document.getElementById('driverfig1'));//司机年龄分布
             var driverchart2 = echarts.init(document.getElementById('driverfig2'));//司机性别分布
