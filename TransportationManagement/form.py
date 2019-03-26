@@ -1,5 +1,6 @@
 from django import forms
-from TransportationManagement.models import Car, Driver, Proposer
+
+from TransportationManagement.models import Car, Driver, Proposer, Accident, Record
 
 
 class UserForm(forms.Form):
@@ -12,18 +13,43 @@ class MyForm(forms.Form):
 
 
 class RegisterForm(forms.Form):
-    pass
+    gender = (
+        ('male', "男"),
+        ('female', "女"),
+    )
+    username = forms.CharField(label="用户名", max_length=128, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(label="密码", max_length=256, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label="确认密码", max_length=256,
+                                widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(label="邮箱地址", widget=forms.EmailInput(attrs={'class': 'form-control'}))
 
 
-class DriverForm(forms.Form):
-    pass
-
-
-class CarForm(forms.Form):
+class DriverForm(forms.ModelForm):
     class Meta:
-        car = Car
-        fields = ['CNo', 'CType', 'COiConsumpution']
+        model = Driver
+        fields = '__all__'
 
 
-class ProposerForm(forms.Form):
-    pass
+class CarForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = '__all__'
+
+
+class ProposerForm(forms.ModelForm):
+    class Meta:
+        model = Proposer
+        exclude = ['Date']
+
+
+class RecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        fields = '__all__'
+
+
+class AccidentForm(forms.ModelForm):
+    class Meta:
+        model = Accident
+        fields = '__all__'
+

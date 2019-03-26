@@ -1,0 +1,564 @@
+{% extends 'basenew.html' %}
+{% load static %}
+{% block title %}业务申请{% endblock %}
+{% block css%}
+    <!-- The table theme-->
+    {#  <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">#}
+    {#<!-- Theme style -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">#}
+    {#  <!-- AdminLTE Skins. Choose a skin from the css/skins#}
+    {#       folder instead of downloading all of them to reduce the load. -->#}
+    {#  <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">#}
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+
+    <script>
+        function formValidation() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.addProposerForm.ctype.value === '') {
+                alert('请输入申请车辆类型！');
+                return false;
+            }
+            if ((document.addProposerForm.num.value === '')) {
+                alert("请输入申请数量！");
+                return false;
+            }
+            if (!(re.test(document.addProposerForm.num.value))) {
+                alert("数量必须为数字！");
+                return false;
+            }
+            if ((document.addProposerForm.mile.value === '')) {
+                alert("请输入申请里程！");
+                return false;
+            }
+            if (!(re.test(document.addProposerForm.mile.value))) {
+                alert("申请里程必须为数字！");
+                return false;
+            }
+            return true;
+        }
+
+        function formValidation2() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (document.changeProposerForm.ctype.value === '') {
+                alert('请输入申请车辆类型！');
+                return false;
+            }
+            if ((document.changeProposerForm.num.value === '')) {
+                alert("请输入申请数量！");
+                return false;
+            }
+            if (!(re.test(document.changeProposerForm.num.value))) {
+                alert("数量必须为数字！");
+                return false;
+            }
+            if ((document.changeProposerForm.mile.value === '')) {
+                alert("请输入申请里程！");
+                return false;
+            }
+            if (!(re.test(document.changeProposerForm.mile.value))) {
+                alert("申请里程必须为数字！");
+                return false;
+            }
+            if (document.changeProposerForm.isreceive.value === '') {
+                alert("请输入是否受理！");
+                return false;
+            }
+            if (!(document.changeProposerForm.isreceive.value === '受理') || (document.changeProposerForm.isreceive.value === '未受理')) {
+                alert("必须为受理或未受理！");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
+{% endblock %}
+{% block content %}
+
+    <div class="modal fade" id="addProposer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:addproposer' %}" method="post"
+                      name="addProposerForm" onsubmit="return(formValidation());">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">申请业务</h4>
+                    </div>
+                    <div class="modal-body" id="addProposerModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="addProposerCType" class="col-sm-2 control-label">车辆类型：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="addProposerCType" class="form-control" name="ctype"
+                                           placeholder="长途车">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addProposerNum" class="col-sm-2 control-label">申请数量：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addProposerNum" class="form-control" name="num"
+                                           placeholder="100">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addProposerMile" class="col-sm-2 control-label">申请里程：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="addProposerMile" class="form-control" name="mile"
+                                           placeholder="2500">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelAdd" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToAdd" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changeProposer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="{% url 'TransportationManagement:changeproposer' %}" method="post"
+                      name="changeProposerForm" onsubmit="return(false);">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">申请业务</h4>
+                    </div>
+                    <div class="modal-body" id="changeProposerModal">
+                        <div class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="changeProposerCType" class="col-sm-2 control-label">车辆类型：</label>
+                                {#                        <div class="col-sm-10">{{ carForm.CNo }}</div>#}
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeProposerCType" class="form-control" name="ctype"
+                                           placeholder="长途车">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeProposerNum" class="col-sm-2 control-label">申请数量：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeProposerNum" class="form-control" name="num"
+                                           placeholder="20">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeProposerMile" class="col-sm-2 control-label">申请里程：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeProposerMile" class="form-control" name="mile"
+                                           placeholder="2500">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeProposerTime" class="col-sm-2 control-label">申请时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeProposerTime" class="form-control" name="time"
+                                           placeholder="2018/11/29">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="changeProposerRec" class="col-sm-2 control-label">是否受理：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="changeProposerRec" class="form-control" name="isreceive"
+                                           placeholder="受理/未受理">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="center-block">
+                            <button id="cancelChange" type="button" class="btn btn-default" data-dismiss="modal">取消
+                            </button>
+                            <button id="sureToChange" type="submit" class="btn btn-success">保存</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteProposer" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">确认删除该申请信息？</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="sureToDelete" type="button" class="btn btn-danger">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content-header">
+      <h1>
+        业务信息
+        <small>info</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{% url 'TransportationManagement:proposer' %}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active">业务申请</li>
+      </ol>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="box box-solid">
+            <div class="box-header">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <h3 class="box-title">业务信息<small>(%)</small></h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-default btn-sm" data-widget="remove"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="box-body">
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                              <h3 class="box-title">业务申请数量：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="profig1" style="width: 600px;height:400px;"></div>
+                            </div>
+                            <!-- /.box-body -->
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                        <!-- BAR CHART -->
+                          <div class="box box-success">
+
+                            <div class="box-header with-border">
+                                <h3 class="box-title">申请的车辆类型：</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                              </div>
+                            </div>
+                            <div class="box-body">
+                                <div id="profig2" style="width: 600px;height:400px;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                    </div>
+        </div>
+
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">申请总表</h3>
+                    <div class="btn-group pull-right ">
+                        <button id='add' class="btn btn-primary" type="button">
+                            <span class="glyphicon glyphicon-plus"></span>增加
+                        </button>
+                        <button id='change' class="btn btn-info" type="button">
+                            <span class="glyphicon glyphicon-pencil"></span>修改
+                        </button>
+                        <button id='delete' class="btn btn-success" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>删除
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="proposer_table" class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>车辆类型</th>
+                            <th>申请数量</th>
+                            <th>申请里程</th>
+                            <th>申请时间</th>
+                            <th>是否受理</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for proposer in proposer_list %}
+                            <tr>
+                                <td>{{ proposer.id }}</td>
+                                <td>{{ proposer.CType }}</td>
+                                <td>{{ proposer.Num }}</td>
+                                <td>{{ proposer.Mileage }}</td>
+                                <td>{{ proposer.Date | date:"Y/m/d" }}</td>
+                                {% if proposer.isRecived == True %}
+                                    <td class="text-green text-bold">已受理</td>
+                                    {% else %}
+                                    <td class="text-red text-bold">未受理</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>编号</th>
+                            <th>车辆类型</th>
+                            <th>申请数量</th>
+                            <th>申请里程</th>
+                            <th>申请时间</th>
+                            <th>是否受理</th>
+                        </tr>
+                    </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
+    <!-- SlimScroll -->
+    <script src="{% static 'plugins/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <!-- FastClick -->
+    <script src="{% static 'plugins/fastclick/fastclick.js' %}"></script>
+    <!-- AdminLTE App -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{% static 'dist/js/demo.js' %}"></script>
+    <!-- page script -->
+<script>
+$(function () {
+
+    var table = $('#proposer_table').DataTable({
+          "paging": true,       <!-- 允许分页 -->
+          "lengthChange": true, <!-- 允许改变每页显示的行数 -->
+          "searching": true,    <!-- 允许内容搜索 -->
+          "ordering": true,     <!-- 允许排序 -->
+          "info": true,         <!-- 显示信息 -->
+          "autoWidth": false,    <!-- 固定宽度 -->
+        "language": {
+            "sProcessing": "处理中...",
+            "sLengthMenu": "显示 _MENU_ 项结果",
+            "sZeroRecords": "没有匹配结果",
+            "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+            "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+            "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+            "sInfoPostFix": "",
+            "sSearch": "搜索:",
+            "sUrl": "",
+            "sEmptyTable": "表中数据为空",
+            "sLoadingRecords": "载入中...",
+            "sInfoThousands": ",",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "上页",
+                "sNext": "下页",
+                "sLast": "末页"
+            },
+            "oAria": {
+                "sSortAscending": ": 以升序排列此列",
+                "sSortDescending": ": 以降序排列此列"
+            }
+        },
+        "columnDefs": [{
+            "searchable": false,
+            "orderable": true,
+            "targets": 0
+        }],
+        "order": [[0, 'asc']]
+    });
+
+    $('#proposer_table tbody').on('click', 'tr', function (e) {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+
+    $('#add').click(function () {
+        console.log("new car.");
+        $('#addProposer').modal();
+    });
+    $('#change').click(function () {
+        console.log("change car");
+        if (table.rows('.selected').data().length) {
+            $("#changeProposer").modal();
+            var rowData = table.rows('.selected').data()[0];
+            var inputs = $('#changeProposer').find('input');
+            for (let i = 0; i < inputs.length; i++) {
+                $(inputs[i]).val(rowData[i]);
+            }
+        } else {
+            alert("请选择一个项目！");
+        }
+    });
+
+    $('#sureToChange').click(function () {
+        console.log('sure change.');
+        var rowData = table.rows('.selected').data()[0];
+        const pid = rowData[0];
+        const ctype = $('#changeProposerCType').val();
+        const num = $('#changeProposerNum').val();
+        const mile = $('#changeProposerMile').val();
+        const time = $("#changeProposerTime").val();
+        const isrec = $('#changeProposerRec').val();
+
+        function val() {
+            var re = /^[0-9]+.?[0-9]*/;
+            if (ctype === '') {
+                alert('请输入申请车辆类型！');
+            }
+            if (num === '') {
+                alert("请输入申请数量！");
+            }
+            if (!(re.test(num))) {
+                alert("数量必须为数字！");
+            }
+            if (mile === '') {
+                alert("请输入申请里程！");
+            }
+            if (!(re.test(mile))) {
+                alert("申请里程必须为数字！");
+            }
+            if (isrec === '') {
+                alert("请输入是否受理！");
+            }
+            if (!((isrec === '已受理') || (isrec === '未受理'))) {
+                alert("必须为已受理或未受理！");
+            }
+        }
+
+        val();
+        data = {
+            'pid': pid,
+            'ctype': ctype,
+            'num': num,
+            'mile': mile,
+            'time': time.toString(),
+            'isrce': isrec === '已受理'
+        };
+
+        $.get(
+            "{% url 'TransportationManagement:changeproposer' %}",
+            data,
+            function (rec) {
+                if (!rec) {
+                    alert('修改失败！');
+                } else {
+
+                    var tds = Array.prototype.slice.call($('.selected td'));
+                    newctype = rec['newctype'];
+                    newnum = rec['newnum'];
+                    newmile = rec['newmile'];
+                    newtime = rec['newtime'];
+                    newrec = rec['newrec'] ? '已受理' : '未受理';
+
+                    tds[1].innerHTML = newctype;
+                    tds[2].innerHTML = newnum;
+                    tds[3].innerHTML = newmile;
+                    tds[4].innerHTML = newtime;
+                    tds[5].innerHTML = newrec;
+                    alert("修改成功！");
+                }
+            }
+        );
+    });
+
+    $('#delete').click(function () {
+        console.log("delete proposer");
+        if (table.rows('.selected').data().length) {
+            $("#deleteProposer").modal();
+            $('#sureToDelete').click(function () {
+                var rowData = table.rows('.selected').data()[0];
+                const pid = rowData[0];
+                const data = {'pid': pid};
+                $.get('{% url 'TransportationManagement:deleteproposer' %}',
+                    data,
+                    function (rec, status) {
+                        if (status === 'success') {
+                            table.row('.selected').remove().draw(false);
+                            alert('删除成功！');
+                        } else {
+                            alert('删除失败！');
+                        }
+                    }
+                );
+            });
+        } else {
+            alert("请选择一个要删除的项目。");
+        }
+    });
+
+
+});
+
+function proposeplot() {
+        var prochart1 = echarts.init(document.getElementById('profig1'));//业务申请数量时间
+        var prochart2 = echarts.init(document.getElementById('profig2'));//车辆类型
+        var jspiedata = [];
+
+        var chart1op = {
+            title:{},
+            legend:{},
+            xAxis:{
+                data:{{ pro_date_list | safe }}
+            },
+            yAxis:{},
+            tooltip:{},
+            series:[{
+                name:'业务申请数量变化',
+                type:'line',
+                data:{{ pro_date_c | safe }},
+                areaStyle: {},
+                markPoint: {
+                    data: [
+                        {type: 'max', name: '最大值', itemStyle: {normal: {color: 'red'}}},
+                        {type: 'min', name: '最小值', itemStyle: {normal: {color: 'gray'}}}
+                    ],
+                },
+                markLine: {
+                    data: [
+                        {type: 'average', name: '平均值', itemStyle: {nomal: {color: 'green'}}}
+                    ],
+                }
+            }],
+        };
+        var chart2op = {
+            title:{},
+            legend:{
+                data:{{ pro_type_list | safe }}
+            },
+            tooltip:{},
+            series:[{
+                type:'pie',
+                data: {{ pie_data | safe }}
+            }]
+        };
+        prochart1.setOption(chart1op);
+        prochart2.setOption(chart2op);
+    }
+    proposeplot();
+</script>
+{% endblock %}

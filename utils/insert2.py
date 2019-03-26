@@ -1,8 +1,10 @@
-from TransportationManagement.models import Driver, Car, Accident, Record, Proposer
+from datetime import timedelta
 from random import randint, choice, choices
+
 from createUser import the_name_list
 from django.utils import timezone
-from datetime import timedelta
+
+from TransportationManagement.models import Driver, Car, Accident, Record, Proposer
 
 choice_list = ['豫B', '冀D', '豫E', '辽K', '皖A', '新B', '鲁N']
 type_list = ['大型车', '中型车', '小型车', '公交车', '长途车']
@@ -22,7 +24,7 @@ def add_car(num):
     for i in range(num):
         ctype = choice(type_list)
         try:
-            Car.objects.create(CNo=get_cno(), CType=ctype, COilConsumpution=coil_comsuption[ctype], isAvailable=True)
+            Car.objects.create(CNo=get_cno(), CType=ctype, COilConsumpution=coil_comsuption[ctype], isAvailable=randint(1,10)<9)
         except:
             pass
 
@@ -33,9 +35,9 @@ def add_driver(num):
         dsex = True if randint(1, 10) > 5 else False
         dage = randint(18, 45)
         dphone = choice(phone_first) + "%d%d" % (randint(1111, 9999), randint(1111, 9999))
-        dhire = timezone.now()
+        dhire = timezone.now() - timedelta(days=randint(10, 1000))
         try:
-            Driver.objects.create(DName=dname, DSex=dsex, DAge=dage, PhoneNum=dphone, Hiredata=dhire, isAvailable=True)
+            Driver.objects.create(DName=dname, DSex=dsex, DAge=dage, PhoneNum=dphone, Hiredata=dhire, isAvailable=randint(1,10)<9)
         except:
             pass
 
@@ -45,10 +47,9 @@ def add_proposer(num):
         ctype = choice(type_list)
         num = randint(100, 1000)
         mileage = randint(100, 10000)
-        date = timezone.now()
-        isrecived = False
+        date = timezone.now() - timedelta(days=randint(10, 1000))
         try:
-            Proposer.objects.create(CType=ctype, Num=num, Mileage=mileage, Date=date, isRecived=isrecived)
+            Proposer.objects.create(CType=ctype, Num=num, Mileage=mileage, Date=date, isRecived=randint(1,10)>8)
         except:
             pass
 
@@ -60,9 +61,9 @@ def add_record(num):
     drivers = choices(driver_set, k=num)
     for car, driver in zip(cars, drivers):
         cno, ctype, dno, dname = car.CNo, car.CType, driver.id, driver.DName
-        stime = timezone.now()
+        etime = timezone.now() - timedelta(days=randint(10, 1000))
         days = randint(5, 60)
-        etime = stime + timedelta(days=days)
+        stime = etime - timedelta(days=days)
         oil = days * coil_comsuption[ctype]
         try:
             Record.objects.create(CNo=car, DName=dname, DNo=driver, STime=stime, ETime=etime, OilConsumpution=oil, isDelete=False)
@@ -78,7 +79,7 @@ def add_accident(num):
         zsdriver = rec.DNo
         zsdname = zsdriver.DName
         sgcno = get_cno()
-        time = timezone.now()
+        time = timezone.now() - timedelta(days=randint(10, 1000))
         money = choice(money_list)
         spot = choice(spot_list)
         cause = choice(cause_list)
@@ -98,8 +99,8 @@ def add_accident(num):
 if __name__ == '__main__':
     # add_car(1000)
     # add_driver(200)
-    # add_proposer(1000)
-    # add_record(1000)
+    # add_proposer(500)
+    add_record(500)
     add_accident(50)
 
 

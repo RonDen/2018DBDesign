@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DataTable</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+    <style>
+        .content {
+            margin: 50px auto;
+            border: 1px solid #ccc;
+        }
+        .operation {
+            margin: 10px;
+        }
+        .operation>button {
+            margin: 10px;
+        }
+        #books_length {
+            float: left;
+            margin-left: 20px;
+        }
+        #books_filter {
+            float: right;
+            margin-right: 20px;
+        }
+        #books {
+            margin: 5px;
+        }
+        .center-block {
+            display: block;
+            width: 21%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<p>车牌号：<input type="text" id="name" value=""></p>
+<p>类别：<span id="result"></span></p>
+<button id="AJAX_get" type="button">点击</button>
+</body>
+
+<script type="text/javascript">
+    // 请求服务器，返回JSON
+    $(document).ready(function () {
+        $("#AJAX_get").click(function () {
+            var name = $("#name").val(); // 获取输入框的值
+            var data = {"name": name};  // 打包成get请求发送的数据
+
+            $.get(
+                // 请求的url
+                '{% url 'TransportationManagement:ajax_get' %}',
+                // 发送的数据
+                data,
+                // 回调函数，其中ret是返回的JSON，可以以字典的方式调用
+                function (ret, status) {
+                    var name = ret['name'];
+                    var ctype = ret['ctype'];
+                    // 把查询结果输出到网页上
+                    $("#result").text(ctype);
+                    alert(status)
+                })
+        })
+    })
+</script>
+
+
+</html>
