@@ -16,9 +16,9 @@
       </driver-properties>
     </data-source>
     <data-source source="LOCAL" name="transportation" read-only="true" uuid="cf5b8c13-d7c6-47ed-8347-a5dce836f245">
-      <driver-ref>mysql</driver-ref>
+      <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/transportation</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
