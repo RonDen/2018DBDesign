@@ -453,11 +453,7 @@
               const coil = $("#changeCarOild").val();
               const isava = $('#changeCarAva').val();
               var isgood;
-              if (isava === '正常') {
-                  isgood = true;
-              } else {
-                  isgood = false;
-              }
+              isgood = isava === '正常';
               const data = {
                   'cnoOld': cnoOld,
                   'cno': cno,

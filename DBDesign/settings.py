@@ -79,7 +79,7 @@ DATABASES = {
         # 'NAME': os.path.join(BASE_DIR, 'db.mysql'),
         'NAME': 'transportation',  # the name of database
         'USER': 'root',  # user
-        'PASSWORD': 'newpassword',  # root
+        'PASSWORD': 'password',  # root
         'HOST': 'localhost',
         'PORT': 3306,
     }
