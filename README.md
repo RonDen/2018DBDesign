@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/RonDen/2018DBDesign.svg?branch=master)](https://travis-ci.com/RonDen/2018DBDesign)
+
 # 2018数据库原理课程设计
 
 Author: LuoD
