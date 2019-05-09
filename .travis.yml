@@ -10,6 +10,13 @@ env:
     - DJANGO=2.1.7
 # command to install dependencies
 before_install:
+  - wget https://repo.mysql.com//mysql-apt-config_0.8.10-1_all.deb
+  - sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
+  - sudo apt-get update -q
+  - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
+  - sudo systemctl restart mysql
+  - sudo mysql_upgrade
+  - mysql --version
   - mysql -e 'DROP DATABASE IF EXISTS transportation;' 
   - mysql -e 'CREATE DATABASE IF NOT EXISTS transportation;'
   - mysql -u root --default-character-set=utf8mb4 transportation < transportation.sql
