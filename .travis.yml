@@ -20,7 +20,7 @@ before_install:
   - mysql --version 
   - mysql -e 'DROP DATABASE IF EXISTS transportation;' 
   - mysql -e 'CREATE DATABASE IF NOT EXISTS transportation;'
-  - mysql -u root --default-character-set=utf8 transportation < transportation.sql
+  - mysql -e 'use transportation; source transportation.sql;'
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update;
       brew install python3 redis memcached;
