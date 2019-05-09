@@ -7,11 +7,12 @@ services:
 env:
   global:
     -TRAVIS=true
+    - DJANGO=2.1.7
 # command to install dependencies
 before_install:
-  - mysql -e 'create database if not exists transportation;'
-  - mysql -e 'use transportation;'
-  - mysql -e 'source transportation.sql;'
+  - mysql -e 'DROP DATABASE IF EXISTS transportation;' 
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS transportation;'
+  - mysql -u root --default-character-set=utf8mb4 transportation < transportation.sql
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update;
       brew install python3 redis memcached;
@@ -20,7 +21,7 @@ before_install:
     fi
 
 install:
-  - pip install -r requirements.txt
+  - pip install -r requirements.txt --use-mirrors
 #  - pip install boxx/
 # command to run tests
 script: 
