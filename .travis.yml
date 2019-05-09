@@ -11,7 +11,7 @@ env:
 before_install:
   - mysql -e 'create database if not exists transportation;'
   - mysql -e 'use transportation;'
-  - mysql -e 'source activate transportation.sql;'
+  - mysql -e 'source transportation.sql;'
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update;
       brew install python3 redis memcached;
